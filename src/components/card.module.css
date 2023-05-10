@@ -1,0 +1,20 @@
+.spanishDeck {
+  height: 120px;
+  width: 70px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: 0.3s;
+}
+
+.spanishDeck:hover {
+  cursor: pointer;
+  height: 125px;
+  width: 75px;
+}
+
+.valueContain {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 10%;
+}
