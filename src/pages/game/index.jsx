@@ -8,6 +8,7 @@ import SpanishDeck from '@/components/card';
 const inter = Inter ({subsets: ['latin']});
 
 export default function Game () {
+  let cantUser=3
   let cantPorRonda = 7;
 
   const jugador = {
@@ -20,8 +21,6 @@ export default function Game () {
     jugador.CardPersona.push (carta);
   }
 
-  // function repartirCarta() {
-  // }
   console.log (jugador.CardPersona);
 
   let ApuestaP = 0;
