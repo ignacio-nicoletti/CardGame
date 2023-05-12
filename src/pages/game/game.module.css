@@ -1,18 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 .contain {
   width: 100%;
   height: 100vh;
-  padding: 0;
-  margin: 0;
   background-image: url("../../assets/fondo.png");
   background-size: 100%;
-  background-repeat: no-repeat;
+  font-family: "Bebas Neue", sans-serif;
 }
 
 .containCardPropias {
   display: flex;
-  position: relative;
+  position: absolute;
   justify-content: center;
   top: 75%;
+  left: 25%;
 }
 
 .CardPropias {
@@ -20,6 +20,65 @@
   gap: 10px;
 }
 
-.CardPropias:hover{
+.CardPropias:hover {
   cursor: pointer;
+}
+
+.infoPropia {
+  width: 15%;
+  height: 15%;
+  padding: 1%;
+  position: absolute;
+  border: solid black 3px;
+  border-radius: 10px;
+  top: 75%;
+  background-color: orange;
+  left: 2%;
+}
+
+.infoPartida {
+  width: 15%;
+  height: 15%;
+  background-color: orange;
+  position: absolute;
+  border: solid black 3px;
+  border-radius: 10px;
+  top: 5%;
+  left: 2%;
+  padding: 1%;
+}
+
+.jugadorestres {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  top: 0%;
+}
+
+.jugadoresdos {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  top: 30%;
+}
+
+.jugador2 {
+  margin-top: 20%;
+  width: 15%;
+  height: 15%;
+}
+.jugador3 {
+  width: 15%;
+  height: 15%;
+}
+.jugador4 {
+  margin-top: 20%;
+  width: 15%;
+  height: 15%;
+}
+
+.CardApostada {
+  position: absolute;
+  left: 50%;
+  bottom: 20%;
 }

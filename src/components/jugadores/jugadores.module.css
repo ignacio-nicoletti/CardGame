@@ -1,0 +1,10 @@
+.contain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.contain p {
+  color: white;
+}

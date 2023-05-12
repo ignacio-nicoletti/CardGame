@@ -1,51 +1,108 @@
-import Head from 'next/head';
-import Image from 'next/image';
+'use client';
 import {Inter} from 'next/font/google';
 import style from './game.module.css';
 import {baraja} from '../../baraja.js';
-import SpanishDeck from '@/components/card';
+import Cards from '@/components/cards/card';
+import Jugadores from '@/components/jugadores/jugadores';
+import {useEffect, useState} from 'react';
+import Apuesta from '@/components/apuesta/apuesta';
 
 const inter = Inter ({subsets: ['latin']});
 
 export default function Game () {
-  let cantUser=3
-  let cantPorRonda = 7;
+  let cantUser = 4; //usuarios conectados
+  let cantPorRonda = 3; // cant cartas que se reparten
+  const [CardGanadoraRonda, setCardGanadoraRonda] = useState (''); //La carta que gana en la ronda
+  const [cardPersona, setCardPersona] = useState ([]); //La carta que se tira primero por ronda
+  const [cardApostada, setCardApostada] = useState ([]);
+  const [apuestaP, setApuestaP] = useState (''); //apuesta del jugador en al ronda
+  const [myturn, setMyturn] = useState (true); //su turno true o false
+  const ronda = 1;
+  let ApuestaTotal = 0; //suma de la apuesta de todos
+  let cumplio = false;
+  const points = 5; //puntos que suma
 
   const jugador = {
-    CardPersona: [],
+    CardPersona: [], //guarda las cartas repartidas random
   };
 
-  for (let i = 0; i < cantPorRonda; i++) {
-    const cartaIndex = Math.floor (Math.random () * baraja.length);
-    const carta = baraja[cartaIndex];
-    jugador.CardPersona.push (carta);
-  }
+  useEffect (() => {
+    for (let i = 0; i < cantPorRonda; i++) {
+      const cartaIndex = Math.floor (Math.random () * baraja.length);
+      const carta = baraja[cartaIndex];
+      jugador.CardPersona.push (carta);
+    }
+  });
 
-  console.log (jugador.CardPersona);
-
-  let ApuestaP = 0;
-  let ApuestaTotal = 0;
-  let cumplio = false;
-  const point = 5;
+  const repartir = () => {
+    setCardPersona (jugador.CardPersona);
+  };
 
   return (
     <div className={style.contain}>
-      <div className={style.containCardPropias}>
 
+      <div className={style.containCardPropias}>
         <div className={style.CardPropias}>
-          {jugador.CardPersona.map (card => (
-            <SpanishDeck value={card.valor} palo={card.tipo} />
+          {cardPersona.map (card => (
+            <Cards
+              value={card.valor}
+              palo={card.tipo}
+              setCardApostada={setCardApostada}
+              cardPersona={cardPersona}
+              setCardPersona={setCardPersona}
+            />
           ))}
         </div>
       </div>
 
-      <p>jugadores</p>
+      {cantUser === 4
+        ? <div className={style.jugadorestres}>
+            <div className={style.jugador2}>
+              <Jugadores />
+            </div>
+            <div className={style.jugador3}>
+              <Jugadores />
+            </div>
+            <div className={style.jugador4}>
+              <Jugadores />
+            </div>
+          </div>
+        : <div className={style.jugadoresdos}>
+            <div>
+              <Jugadores />
+            </div>
+            <div>
+              <Jugadores />
+            </div>
+          </div>}
       <div />
-      <div>
-        <p>info partida</p>
+      <div className={style.infoPartida}>
+        <p>Cartas Repartidas: {cantPorRonda} </p>
+        <p>Apuesta General: {}</p>
+        <p>Carta Ganadora: {CardGanadoraRonda}</p>
       </div>
-      <div>
-        <p>apuesta propia</p>
+      <div className={style.infoPropia}>
+        <p>Apuesta propia: {apuestaP} </p>
+        <p>Cumplio: {cumplio === true ? '✔' : '❌'}</p>
+      </div>
+      <button onClick={repartir}>repartir</button>
+
+      {myturn === true
+        ? <Apuesta
+            cant={cantPorRonda}
+            setApuestaP={setApuestaP}
+            setMyturn={setMyturn}
+          />
+        : ''}
+      <div className={style.CardApostada}>
+
+        {cardApostada.map (card => (
+          <Cards
+            value={card.value}
+            palo={card.tipo}
+            setCardApostada={setCardApostada}
+          />
+        ))}
       </div>
     </div>
   );
