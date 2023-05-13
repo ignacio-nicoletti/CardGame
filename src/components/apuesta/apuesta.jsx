@@ -5,7 +5,7 @@ import style from './apuesta.module.css';
 const Apuesta = ({setJugador1, jugador1}) => {
 const[apuesta,setApuesta]=useState("")
 
-
+console.log(apuesta);
     const handleSubmit = () => {
      
       setJugador1({...jugador1, apuestaP: apuesta,myturn:false})

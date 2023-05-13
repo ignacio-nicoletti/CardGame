@@ -6,6 +6,7 @@ import Cards from '@/components/cards/card';
 import Jugadores from '@/components/jugadores/jugadores';
 import {useEffect, useState} from 'react';
 import Apuesta from '@/components/apuesta/apuesta';
+import {shuffle} from '@/logica/logica';
 
 const inter = Inter ({subsets: ['latin']});
 
@@ -14,40 +15,45 @@ export default function Game () {
 
   const [CardGanadoraRonda, setCardGanadoraRonda] = useState (''); //La carta que gana en la ronda
 
-  const points = 5; //puntos que suma
-
- 
   const [jugador1, setJugador1] = useState ({
+    id: 1,
     cardPersona: [],
-    apuestaP:0,
+    apuestaP: 0,
+    cardsganadas: '',
     cardApostada: [{valor: '', palo: ''}],
     myturn: false, //boolean
     cumplio: '', //boolean
-    obligado: '', //boolean
+    obligado: true, //boolean
   });
   const [jugador2, setJugador2] = useState ({
+    id: 2,
     cardPersona: [],
     apuestaP: 0,
-    cardApostada: [],
-    myturn: '', //boolean
+    cardsganadas: '',
+    cardApostada: [{valor: '', palo: ''}],
+    myturn: false, //boolean
     cumplio: '', //boolean
-    obligado: '', //boolean
+    obligado: false, //boolean
   });
   const [jugador3, setJugador3] = useState ({
+    id: 3,
     cardPersona: [],
     apuestaP: 0,
-    cardApostada: {},
-    myturn: '', //boolean
+    cardsganadas: '',
+    cardApostada: [{valor: '', palo: ''}],
+    myturn: false, //boolean
     cumplio: '', //boolean
-    obligado: '', //boolean
+    obligado: false, //boolean
   });
   const [jugador4, setJugador4] = useState ({
+    id: 4,
     cardPersona: [],
     apuestaP: 0,
-    cardApostada: [],
-    myturn: '', //boolean
+    cardsganadas: '',
+    cardApostada: [{valor: '', palo: ''}],
+    myturn: false, //boolean
     cumplio: '', //boolean
-    obligado: '', //boolean
+    obligado: false, //boolean
   });
 
   const [jugadores, setJugadores] = useState ({
@@ -58,32 +64,20 @@ export default function Game () {
   });
 
   const [ronda, setRonda] = useState ({
+    vuelta: 1,
     numeroRonda: 1,
-    cardPorRonda: 5,
+    cardPorRonda: 1,
     typeRound: 'apuesta', //apuesta o ronda
     turnoJugador: 1, //1j 2j 3j 4j
-    ApuestaTotal: jugador1.apuestaP+jugador2.apuestaP+jugador3.apuestaP+jugador4.apuestaP, //suma de la apuesta de todos
-    CardGanadoraxRonda: '',
+    ApuestaTotal: jugador1.apuestaP +
+      jugador2.apuestaP +
+      jugador3.apuestaP +
+      jugador4.apuestaP, //suma de la apuesta de todos
+    CardGanadoraxRonda: [],
+    points: 5, //puntos que suma
   });
-  useEffect (() => {
-    repartir ();
-  }, []);
 
   const repartir = () => {
-    function shuffle (array) {
-      let currentIndex = array.length;
-      let temporaryValue, randomIndex;
-
-      while (currentIndex !== 0) {
-        randomIndex = Math.floor (Math.random () * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-      }
-      return array;
-    }
-
     let cartasMezcladas = shuffle (baraja);
     setJugadores ({
       jugador1: cartasMezcladas.splice (0, ronda.cardPorRonda),
@@ -94,71 +88,83 @@ export default function Game () {
   };
 
   const gameInit = () => {
+    setRonda ({...ronda, cardPorRonda: 1});
     setJugador1 ({...jugador1, cardPersona: jugadores.jugador1, myturn: true});
     setJugador2 ({...jugador2, cardPersona: jugadores.jugador2});
     setJugador3 ({...jugador3, cardPersona: jugadores.jugador3});
     setJugador4 ({...jugador4, cardPersona: jugadores.jugador4});
   };
-  console.log (jugador2);
-  return (
-    <div className={style.contain}>
-      <div className={style.containCardPropias}>
-        <div className={style.CardPropias}>
 
-          {jugador1.cardPersona.map (card => (
-            <Cards
-              valor={card.valor}
-              palo={card.palo}
-              jugador1={jugador1}
-              setJugador1={setJugador1}
-            />
-          ))}
+  if (
+    (jugador1.cardApostada.valor < jugador2.cardApostada.valor) &&
+    (jugador1.cardApostada.valor <jugador3.cardApostada.valor)  && 
+    (jugador1.cardApostada.valor <jugador4.cardApostada.valor) 
+    
+  ){setRonda({...ronda,CardGanadoraxRonda:jugador1.cardApostada[0].valor})}
+
+  console.log(ronda.CardGanadoraxRonda);
+    return (
+      <div className={style.contain}>
+        <div className={style.containCardPropias}>
+          <div className={style.CardPropias}>
+
+            {jugador1.cardPersona.map (card => (
+              <Cards
+                valor={card.valor}
+                palo={card.palo}
+                jugador1={jugador1}
+                setJugador1={setJugador1}
+              />
+            ))}
+          </div>
+        </div>
+
+        {cantUser === 4
+          ? <div className={style.jugadorestres}>
+              <div className={style.jugador2}>
+                <Jugadores jugador={jugador2} />W
+              </div>
+              <div className={style.jugador3}>
+                <Jugadores jugador={jugador3} />
+              </div>
+              <div className={style.jugador4}>
+                <Jugadores jugador={jugador4} />
+              </div>
+            </div>
+          : <div className={style.jugadoresdos}>
+              <div>
+                <Jugadores jugador={jugador2} />
+              </div>
+              <div>
+                <Jugadores jugador={jugador3} />
+              </div>
+            </div>}
+        <div />
+        <div className={style.infoPartida}>
+          <p>Cartas Repartidas: {ronda.cardPorRonda} </p>
+          <p>Apuesta General: {ronda.ApuestaTotal}</p>
+          <p>Carta Ganadora: {ronda.CardGanadoraxRonda.valor}</p>
+          <p>Vuelta: {ronda.vuelta}</p>
+          <p>Ronda: {ronda.numeroRonda}</p>
+        </div>
+        <div className={style.infoPropia}>
+          <p>Apuesta propia: {jugador1.apuestaP} </p>
+
+          <p>Cumplio: {jugador1.cumplio === true ? '✔' : '❌'}</p>
+        </div>
+        <button onClick={repartir}>repartir</button>
+        <button onClick={gameInit}>Comenzar Juego</button>
+
+        {ronda.typeRound === 'apuesta' && jugador1.myturn === true
+          ? <Apuesta jugador1={jugador1} setJugador1={setJugador1} />
+          : ''}
+        <div className={style.CardApostada}>
+
+          {jugador1.cardApostada[0].valor &&
+            jugador1.cardApostada.map (card => (
+              <Cards valor={card.valor} palo={card.palo} />
+            ))}
         </div>
       </div>
-
-      {cantUser === 4
-        ? <div className={style.jugadorestres}>
-            <div className={style.jugador2}>
-              <Jugadores jugador={jugador2} />
-              {/* <p>{jugador2.cardPersona}</p> */}
-            </div>
-            <div className={style.jugador3}>
-              <Jugadores jugador={jugador3} />
-            </div>
-            <div className={style.jugador4}>
-              <Jugadores jugador={jugador4} />
-            </div>
-          </div>
-        : <div className={style.jugadoresdos}>
-            <div>
-              <Jugadores />
-            </div>
-            <div>
-              <Jugadores />
-            </div>
-          </div>}
-      <div />
-      <div className={style.infoPartida}>
-        <p>Cartas Repartidas: {ronda.cardPorRonda} </p>
-        <p>Apuesta General: {ronda.ApuestaTotal}</p>
-        <p>Carta Ganadora: {CardGanadoraRonda}</p>
-      </div>
-      <div className={style.infoPropia}>
-        <p>Apuesta propia: {jugador1.apuestaP} </p>
-        <p>Cumplio: {jugador1.cumplio === true ? '✔' : '❌'}</p>
-      </div>
-      <button onClick={gameInit}>Comenzar Juego</button>
-
-      {jugador1.myturn === true
-        ? <Apuesta jugador1={jugador1} setJugador1={setJugador1} />
-        : ''}
-      <div className={style.CardApostada}>
-
-        {jugador1.cardApostada[0].valor &&
-          jugador1.cardApostada.map (card => (
-            <Cards valor={card.valor} palo={card.palo} />
-          ))}
-      </div>
-    </div>
-  );
+    );
 }

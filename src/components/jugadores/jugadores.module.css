@@ -1,10 +1,50 @@
-.contain {
+.cardContain {
+  height: 20px;
+  width: 30px;
+  transition: 0.3s;
+
+}
+.align{
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  gap: 15px;
+ 
 }
 
-.contain p {
+.AcomodarCard2 {
+  display: flex;
   color: white;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  
+}
+
+.AcomodarCard3 {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  
+}
+
+.alinearCard3 {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  
+  
+}
+
+.card3 {
+  height: 30px;
+  width: 20px;
+  transition: 0.3s;
+}
+.AcomodarCard4 {
+  justify-content: center;
+  text-align: center;
+  flex-direction: row-reverse;
+  display: flex;
+
 }
