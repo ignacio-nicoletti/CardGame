@@ -2,23 +2,26 @@ import React, { useState } from 'react';
 import style from './apuesta.module.css';
 
 
-const Apuesta = ({cant,setApuestaP,setMyturn}) => {
+const Apuesta = ({setJugador1, jugador1}) => {
 const[apuesta,setApuesta]=useState("")
 
 
     const handleSubmit = () => {
-        setApuestaP(apuesta)
-        setMyturn(false)
+     
+      setJugador1({...jugador1, apuestaP: apuesta,myturn:false})
+     
   };
-
+console.log(apuesta);
   return(<>
     
 
     <div className={style.contain}>
       <select name="select"  onChange={(event) =>setApuesta(event.target.value)}>
-        <option value="1">Value 1</option>
-        <option value="2">Value 2</option>
-        <option value="3">Value 3</option>
+        <option disabled={true}>Opciones</option>
+        <option value="0">0 Carta</option>
+        <option value="1">1 Cartas</option>
+        <option value="2">2 Cartas</option>
+        <option value="3">3 Cartas</option>
       </select>
       <button onClick={handleSubmit}>Enviar</button>
 
