@@ -7,7 +7,7 @@ import copa from '../../assets/valores/copas.png';
 import espada from '../../assets/valores/espada.png';
 import oro from '../../assets/valores/oro.png';
 
-const Cards = ({jugador1, setJugador1 ,valor, palo}) => {
+const Cards = ({jugador1, setJugador1 ,valor, palo,typeRound}) => {
 
 let imgPalo={
 "oro":oro,
@@ -21,9 +21,10 @@ let imgPalo={
   let filterCard;
 
   const handlerclick = () => {
+    if(typeRound==="ronda"){
     filterCard = jugador1.cardPersona.filter (e => e.valor !== valor || e.palo !==palo);
     setJugador1({...jugador1,cardApostada:[{valor,palo}],cardPersona:filterCard})
-
+    }
   };
 
   return (
