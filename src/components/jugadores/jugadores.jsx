@@ -38,7 +38,7 @@ const Jugadores = ({jugador}) => {
 
         <div className={alinear}>
           {jugador.cardPersona.map (e => (
-            <div className={cardalign} style={{gap:"50"}}>
+            <div className={cardalign} style={{gap:"50"}} key={jugador}>
               <Image src={backface} alt="backface Card" width={30} height={30}  style={{transform:rotate}}/>
             </div>
           ))}
