@@ -27,13 +27,18 @@
 .infoPropia {
   width: 15%;
   height: 15%;
-  padding: 1%;
+  padding-inline: 1%;
   position: absolute;
   border: solid black 3px;
   border-radius: 10px;
   top: 75%;
   background-color: orange;
   left: 2%;
+
+}
+
+.infoPropia p{
+  margin:0
 }
 
 .infoPartida {
@@ -46,6 +51,7 @@
   top: 3%;
   left: 2%;
   padding-inline: 1%;
+  
 }
 .infoPartida p {
   margin: 0;

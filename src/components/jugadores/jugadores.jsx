@@ -28,7 +28,7 @@ const Jugadores = ({jugador}) => {
   return (
     <div className={estilo}>
       <div >
-        <p>Apuesta:{jugador.apuestaP}</p>
+        <p>Apuesta: {jugador.apuestaP}</p>
         <div >
           <Image src={person} alt="persona" width={150} height={100} />
         </div>
@@ -37,8 +37,8 @@ const Jugadores = ({jugador}) => {
       <div>
 
         <div className={alinear}>
-          {jugador.cardPersona.map (e => (
-            <div className={cardalign} style={{gap:"50"}} key={jugador}>
+          {jugador.cardPersona.map ((e ,index)=> (
+            <div className={cardalign} style={{gap:"50"}} key={index}>
               <Image src={backface} alt="backface Card" width={30} height={30}  style={{transform:rotate}}/>
             </div>
           ))}

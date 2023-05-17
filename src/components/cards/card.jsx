@@ -7,23 +7,27 @@ import copa from '../../assets/valores/copas.png';
 import espada from '../../assets/valores/espada.png';
 import oro from '../../assets/valores/oro.png';
 
-const Cards = ({jugador1, setJugador1 ,valor, palo,ronda,setRonda}) => {
-
-let imgPalo={
-"oro":oro,
-"espada":espada,
-"basto":basto,
-"copa":copa,
-
-
-}
+const Cards = ({jugador1, setJugador1, valor, palo, ronda, setRonda}) => {
+  let imgPalo = {
+    oro: oro,
+    espada: espada,
+    basto: basto,
+    copa: copa,
+  };
 
   let filterCard;
 
   const handlerclick = () => {
-    if(ronda.typeRound==="ronda"){
-    filterCard = jugador1.cardPersona.filter (e => e.valor !== valor || e.palo !==palo);
-    setJugador1({...jugador1,cardApostada:[{valor,palo}],cardPersona:filterCard})
+    if (ronda.typeRound === 'ronda') {
+      filterCard = jugador1.cardPersona.filter (
+        e => e.valor !== valor || e.palo !== palo
+      );
+      setJugador1 ({
+        ...jugador1,
+        cardApostada: [{valor, palo}],
+        cardPersona: filterCard,
+      });
+      // setRonda ({...ronda, CardGanadoraxRonda: [{valor, palo}]});
     }
   };
 

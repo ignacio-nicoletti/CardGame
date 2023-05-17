@@ -8,11 +8,15 @@
   width: 20%;
   height: 10%;
   padding-top: 2%;
+  padding-bottom: 2%;
   top: 40%;
   border-radius: 10px;
   align-items: center;
 }
 
+.contain p{
+  margin:0
+}
 .contain button {
   width: 60%;
   height: 30%;
