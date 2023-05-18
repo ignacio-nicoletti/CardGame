@@ -7,7 +7,7 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
 
 
   const apuestaGeneral = () => {
-   
+
     let apuesta1;
     let apuesta2;
     let apuesta3;
@@ -26,9 +26,16 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
       jugador2.apuestaP > -1 &&
       jugador3.apuestaP > -1 &&
       jugador4.apuestaP > -1
-      ) {
-        setRonda({ ...ronda, typeRound: "ronda", ApuestaTotal: Number(apuestafinal) })
-      }
+    ) {
+      let turno
+      if (ronda.obligado === 1) {
+        turno = ronda.obligado + 1
+      } else if (ronda.obligado === 2) { turno = ronda.obligado + 1 }
+      else if (ronda.obligado === 3) { turno = ronda.obligado + 1 }
+      else { turno = 1 }
+
+      setRonda({ ...ronda, typeRound: "ronda", ApuestaTotal: Number(apuestafinal), turnoJugador: turno })
+    }
 
 
   }
@@ -37,11 +44,11 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
     if (ronda.typeRound === "apuesta" && ronda.turnoJugador === ronda.obligado) {
       console.log("turno del obligado")
 
-      if (ronda.cardPorRonda === ronda.apuesta){//TERMINAR ESTA FUNCION
+      if (ronda.cardPorRonda === ronda.apuesta) {//TERMINAR ESTA FUNCION
 
+      }
     }
   }
-}
 
 
   useEffect(() => {
@@ -54,7 +61,7 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
 
 
   useEffect(() => {
-      apuestaGeneral()//suma las apuestas y si todos apostaron cambia el tipo de ronda
+    apuestaGeneral()//suma las apuestas y si todos apostaron cambia el tipo de ronda
   }, [jugador1.apuestaP, jugador2.apuestaP, jugador3.apuestaP, jugador4.apuestaP])
 
 
