@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './card.module.css';
 import basto from '../../assets/valores/basto.png';
 import copa from '../../assets/valores/copas.png';
@@ -15,27 +15,42 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
     copa: copa,
   };
 
+
+  // const[id,setId]=useState("")
+  // console.log(id);
+
   let filterCard;
-
   const handlerclick = () => {
-
 
     if (ronda?.typeRound === 'ronda' && jugador.myturn === true) {
       filterCard = jugador.cardPersona.filter(
         e => e.valor !== valor || e.palo !== palo
       );
+
       setJugador({
         ...jugador,
         cardApostada: [{ valor, palo }],
         cardPersona: filterCard,
       });
+
+      //tiro la card, la saco del mazo propio y la seteo en la apostada
+
       if (ronda.turnoJugador === 1 || ronda.turnoJugador === 2 || ronda.turnoJugador === 3) {
+
+        let id = jugador.id
+
         setRonda({
-          ...ronda, turnoJugador: ronda.turnoJugador + 1
+          ...ronda, turnoJugador: ronda.turnoJugador + 1, ultimaCardApostada: [{ valor, palo, id: id }]
         });
-      } else setRonda({ ...ronda, turnoJugador: 1 })
+      } else {
+        let id = jugador.id
+
+        setRonda({ ...ronda, turnoJugador: 1, ultimaCardApostada: [{ valor, palo, id: id }] })
+      }
     }
+    //cambio de turno al que me sigue 
   };
+
 
   return (
     <div className={styles.spanishDeck}>

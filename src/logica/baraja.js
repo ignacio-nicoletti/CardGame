@@ -50,10 +50,15 @@
 
 //   ];
 
-export const baraja = [];
+export const barajar=()=>{
+
+
+const baraja = [];
 for (let valor = 1; valor <= 12; valor++) {
   baraja.push({ valor: valor, palo: "basto" });
   baraja.push({ valor: valor, palo: "copa" });
   baraja.push({ valor: valor, palo: "espada" });
   baraja.push({ valor: valor, palo: "oro" });
+}
+return baraja
 }
