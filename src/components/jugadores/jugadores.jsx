@@ -69,8 +69,8 @@ const Jugadores = ({ jugador, setJugador, ronda, setRonda }) => {
         <div className={cardApost}>
 
           {jugador.cardApostada[0].valor &&
-            jugador.cardApostada.map(card => (
-              <Cards valor={card.valor} palo={card.palo} />
+            jugador.cardApostada.map((card,index) => (
+              <Cards key={index}valor={card.valor} palo={card.palo} />
             ))}
         </div>
 

@@ -1,7 +1,7 @@
 'use client';
 import { Inter } from 'next/font/google';
 import style from './game.module.css';
-import {barajar } from '../../logica/baraja.js';
+import { barajar } from '../../logica/baraja.js';
 import Cards from '@/components/cards/card';
 import Jugadores from '@/components/jugadores/jugadores';
 import { useEffect, useState } from 'react';
@@ -69,22 +69,15 @@ export default function Game() {
     turnoJugador: 1, //1j 2j 3j 4j
     obligado: "",//numero de jugador obligado
     ApuestaTotal: 0, //suma de la apuesta de todos
-    CardGanadoraxRonda: [{ valor: '', palo: '' }],
-    ultimaCardApostada:[{ valor: '', palo: '',id:'' }],
+    CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
+    ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
+    AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
     points: 5, //puntos que suma
     ganadorRonda: ""
   });
 
-// crear un estado que setee la ultima carta 
-// crear un estado que setee el ultimo jugador que jugo 
-// y de esos 2 estados evalua que la card apostada sea >= a la ultima card apostada 
-
-
-
-
-
   const mezclar = () => {
-    let baraja=barajar()
+    let baraja = barajar()
     let cartasMezcladas = shuffle(baraja);
     setJugadores({
       jugador1: cartasMezcladas.splice(0, ronda.cardPorRonda),
@@ -94,8 +87,6 @@ export default function Game() {
     });
 
   };
-
-
 
   const repartir = () => {
     setJugador1({ ...jugador1, cardPersona: jugadores.jugador1 });
@@ -108,63 +99,28 @@ export default function Game() {
   const gameInit = () => {
 
     repartir()
-    setRonda({ ...ronda, typeRound: "apuesta" });
-
-
+    setRonda({ ...ronda, typeRound: "ronda" });
   };
-
+  
+  
   const comprobarMasGrande = () => {
-
-    if ((jugador1.cardApostada[0].valor !== "") && (jugador2.cardApostada[0].valor !== "") && (jugador3.cardApostada[0].valor !== "") && (jugador4.cardApostada[0].valor !== "" && ronda.numeroRonda <= ronda.cardPorRonda)) {
-
-      if (
-        jugador1.cardApostada[0].valor > jugador2.cardApostada[0].valor &&
-        jugador1.cardApostada[0].valor > jugador3.cardApostada[0].valor &&
-        jugador1.cardApostada[0].valor > jugador4.cardApostada[0].valor
-      ) {
-        setJugador1({ ...jugador1, cardsganadas: jugador1.cardsganadas + 1, myturn: true });
-        setRonda({ ...ronda, CardGanadoraxRonda: jugador1.cardApostada, numeroRonda: ronda.numeroRonda + 1, ganadorRonda: "jugador1" });
-
-
-
-      }
-      else if (jugador2.cardApostada[0].valor > jugador1.cardApostada[0].valor &&
-        jugador2.cardApostada[0].valor > jugador3.cardApostada[0].valor &&
-        jugador2.cardApostada[0].valor > jugador4.cardApostada[0].valor) {
-        setJugador2({ ...jugador2, cardsganadas: jugador2.cardsganadas + 1 });
-        setRonda({ ...ronda, CardGanadoraxRonda: jugador2.cardApostada, numeroRonda: ronda.numeroRonda + 1, ganadorRonda: "jugador2" });
-
-
-      }
-      else if (jugador3.cardApostada[0].valor > jugador1.cardApostada[0].valor &&
-        jugador3.cardApostada[0].valor > jugador2.cardApostada[0].valor &&
-        jugador3.cardApostada[0].valor > jugador4.cardApostada[0].valor) {
-        setJugador3({ ...jugador3, cardsganadas: jugador3.cardsganadas + 1 });
-        setRonda({ ...ronda, CardGanadoraxRonda: jugador3.cardApostada, numeroRonda: ronda.numeroRonda + 1, ganadorRonda: "jugador3" });
-
-
-      }
-      else if (jugador4.cardApostada[0].valor > jugador1.cardApostada[0].valor &&
-        jugador4.cardApostada[0].valor > jugador2.cardApostada[0].valor &&
-        jugador4.cardApostada[0].valor > jugador3.cardApostada[0].valor) {
-        setJugador4({ ...jugador4, cardsganadas: jugador4.cardsganadas + 1 });
-        setRonda({ ...ronda, CardGanadoraxRonda: jugador4.cardApostada, numeroRonda: ronda.numeroRonda + 1, ganadorRonda: "jugador4" });
-
-
-      }
+    if (ronda.ultimaCardApostada[0].valor > ronda.AnteultimaCardApostada[0].valor) {
+      setRonda({ ...ronda, CardGanadoraxRonda: ronda.ultimaCardApostada,ganadorRonda:ronda.CardGanadoraxRonda[0].id })
     }
   };
-
   const resetCardAp = () => {
-    if (ronda.ganadorRonda === "jugador1") { setRonda({ ...ronda, turnoJugador: 1 }) }
-    if (ronda.ganadorRonda === "jugador2") { setRonda({ ...ronda, turnoJugador: 2 }) }
-    if (ronda.ganadorRonda === "jugador3") { setRonda({ ...ronda, turnoJugador: 3 }) }
-    if (ronda.ganadorRonda === "jugador4") { setRonda({ ...ronda, turnoJugador: 4 }) }
-    //depende quien gana arranca y resetea la carta en juego
-    setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
-    setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
-    setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
-    setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
+// if(jugador1.)
+
+
+    // if (ronda.ganadorRonda === "1") { setRonda({ ...ronda, turnoJugador: 1 }) }
+    // if (ronda.ganadorRonda === "2") { setRonda({ ...ronda, turnoJugador: 2 }) }
+    // if (ronda.ganadorRonda === "3") { setRonda({ ...ronda, turnoJugador: 3 }) }
+    // if (ronda.ganadorRonda === "4") { setRonda({ ...ronda, turnoJugador: 4 }) }
+    // //depende quien gana arranca y resetea la carta en juego
+    // setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
+    // setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
+    // setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
+    // setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
   }
 
   const cumplio = () => {
@@ -183,9 +139,7 @@ export default function Game() {
     } else setJugador4({ ...jugador4, cumplio: false })
 
   }
- 
-  
-  
+
   const turno = () => {
     if (ronda.turnoJugador === 1) {
       setJugador1({ ...jugador1, myturn: true })
@@ -215,9 +169,8 @@ export default function Game() {
   }
 
 
-
   useEffect(() => {
-    setRonda({ ...ronda, cardPorRonda: 3, obligado: 4 });//ni bien se monta el componente setea la card
+    setRonda({ ...ronda, cardPorRonda: 1, obligado: 4 });//ni bien se monta el componente setea la card
   }, [])//ya que nunca cambia
 
 
@@ -227,15 +180,15 @@ export default function Game() {
 
   }, [jugador1.cardApostada, jugador2.cardApostada, jugador3.cardApostada, jugador4.cardApostada])//ya que nunca cambia
 
-  useEffect(() => { 
-    resetCardAp() 
-   
-    if( ronda.numeroRonda<Number(ronda.cardPorRonda)){
-      setRonda({...ronda,numeroRonda:3})
+  useEffect(() => {
+    resetCardAp()
+
+    if (ronda.numeroRonda < Number(ronda.cardPorRonda)) {
+      setRonda({ ...ronda, numeroRonda: 3 })
     }
-  
-  
-  
+
+
+
   }, [ronda.numeroRonda])
 
   console.log(ronda);
@@ -345,8 +298,8 @@ export default function Game() {
       <div className={style.CardApostada}>
 
         {jugador1.cardApostada[0].valor &&
-          jugador1.cardApostada.map(card => (
-            <Cards valor={card.valor} palo={card.palo} />
+          jugador1.cardApostada.map((card, index) => (
+            <Cards key={index} valor={card.valor} palo={card.palo} />
           ))}
       </div>
     </div>

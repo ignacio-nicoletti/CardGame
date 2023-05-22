@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './card.module.css';
 import basto from '../../assets/valores/basto.png';
 import copa from '../../assets/valores/copas.png';
@@ -16,12 +16,9 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
   };
 
 
-  // const[id,setId]=useState("")
-  // console.log(id);
 
   let filterCard;
   const handlerclick = () => {
-
     if (ronda?.typeRound === 'ronda' && jugador.myturn === true) {
       filterCard = jugador.cardPersona.filter(
         e => e.valor !== valor || e.palo !== palo
@@ -34,22 +31,23 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
       });
 
       //tiro la card, la saco del mazo propio y la seteo en la apostada
-
+      
       if (ronda.turnoJugador === 1 || ronda.turnoJugador === 2 || ronda.turnoJugador === 3) {
-
-        let id = jugador.id
-
+        
+   
         setRonda({
-          ...ronda, turnoJugador: ronda.turnoJugador + 1, ultimaCardApostada: [{ valor, palo, id: id }]
-        });
+          ...ronda, turnoJugador: ronda.turnoJugador + 1,ultimaCardApostada: [{ valor, palo, id: jugador.id }],AnteultimaCardApostada:ronda.ultimaCardApostada
+        });//setea la card apostada en la ultima y lo que habia en ultima pasa a ser anteultima
+        
+        
       } else {
-        let id = jugador.id
-
-        setRonda({ ...ronda, turnoJugador: 1, ultimaCardApostada: [{ valor, palo, id: id }] })
+        setRonda({ ...ronda, turnoJugador: 1,ultimaCardApostada: [{ valor, palo, id: jugador.id }],AnteultimaCardApostada:ronda.ultimaCardApostada })
       }
+
     }
-    //cambio de turno al que me sigue 
+    //cambio de turno al que me sigue y seteo laultima card con el id y paso la ult a la anteult
   };
+
 
 
   return (
