@@ -17,7 +17,7 @@ export default function Game() {
   const [jugador1, setJugador1] = useState({
     id: 1,
     cardPersona: [],
-    apuestaP: -1, //ponerlo en -1
+    apuestaP: 0,
     cardsganadas: 0,
     cardApostada: [{ valor: '', palo: '' }],
     myturn: false, //boolean
@@ -27,7 +27,7 @@ export default function Game() {
   const [jugador2, setJugador2] = useState({
     id: 2,
     cardPersona: [],
-    apuestaP: -1, //ponerlo en -1
+    apuestaP: 0,
     cardsganadas: 0,
     cardApostada: [{ valor: '', palo: '' }],
     myturn: false, //boolean
@@ -37,7 +37,7 @@ export default function Game() {
   const [jugador3, setJugador3] = useState({
     id: 3,
     cardPersona: [],
-    apuestaP: -1, //ponerlo en -1
+    apuestaP: 0,
     cardsganadas: 0,
     cardApostada: [{ valor: '', palo: '' }],
     myturn: false, //boolean
@@ -47,7 +47,7 @@ export default function Game() {
   const [jugador4, setJugador4] = useState({
     id: 4,
     cardPersona: [],
-    apuestaP: -1, //ponerlo en -1
+    apuestaP: 0,
     cardsganadas: 0,
     cardApostada: [{ valor: '', palo: '' }],
     myturn: false, //boolean
@@ -66,14 +66,17 @@ export default function Game() {
     numeroRonda: 1,//num de ronda
     cardPorRonda: "",//cant de cartas que se reparten
     typeRound: '', //apuesta o ronda
-    turnoJugador: 1, //1j 2j 3j 4j
+    turnoJugadorA: 1, //1j 2j 3j 4j apuesta
+    turnoJugadorR: 1, //1j 2j 3j 4j ronda
     obligado: "",//numero de jugador obligado
     ApuestaTotal: 0, //suma de la apuesta de todos
     CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
     ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
     AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
     points: 5, //puntos que suma
-    ganadorRonda: ""
+    ganadorRonda: "",
+    cantQueApostaron: 0,
+    cantQueTiraron: 0
   });
 
   const mezclar = () => {
@@ -97,105 +100,118 @@ export default function Game() {
   }
 
   const gameInit = () => {
-
     repartir()
-    setRonda({ ...ronda, typeRound: "ronda" });
+    setRonda({ ...ronda, typeRound: "apuesta" });
+
   };
-  
-  
-  const comprobarMasGrande = () => {
-    if (ronda.ultimaCardApostada[0].valor > ronda.AnteultimaCardApostada[0].valor) {
-      setRonda({ ...ronda, CardGanadoraxRonda: ronda.ultimaCardApostada,ganadorRonda:ronda.CardGanadoraxRonda[0].id })
-    }
-  };
-  const resetCardAp = () => {
-// if(jugador1.)
 
-
-    // if (ronda.ganadorRonda === "1") { setRonda({ ...ronda, turnoJugador: 1 }) }
-    // if (ronda.ganadorRonda === "2") { setRonda({ ...ronda, turnoJugador: 2 }) }
-    // if (ronda.ganadorRonda === "3") { setRonda({ ...ronda, turnoJugador: 3 }) }
-    // if (ronda.ganadorRonda === "4") { setRonda({ ...ronda, turnoJugador: 4 }) }
-    // //depende quien gana arranca y resetea la carta en juego
-    // setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
-    // setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
-    // setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
-    // setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
-  }
-
-  const cumplio = () => {
-    console.log("chequeando");
-    if (Number(jugador1.apuestaP) === Number(jugador1.cardsganadas)) {
-      setJugador1({ ...jugador1, cumplio: true })
-    } else setJugador1({ ...jugador1, cumplio: false })
-    if (Number(jugador2.apuestaP) === Number(jugador2.cardsganadas)) {
-      setJugador2({ ...jugador2, cumplio: true })
-    } else setJugador2({ ...jugador2, cumplio: false })
-    if (Number(jugador3.apuestaP) === Number(jugador3.cardsganadas)) {
-      setJugador3({ ...jugador3, cumplio: true })
-    } else setJugador3({ ...jugador3, cumplio: false })
-    if (Number(jugador4.apuestaP) === Number(jugador4.cardsganadas)) {
-      setJugador1({ ...jugador4, cumplio: true })
-    } else setJugador4({ ...jugador4, cumplio: false })
-
-  }
 
   const turno = () => {
-    if (ronda.turnoJugador === 1) {
-      setJugador1({ ...jugador1, myturn: true })
-      setJugador2({ ...jugador2, myturn: false })
-      setJugador3({ ...jugador3, myturn: false })
-      setJugador4({ ...jugador4, myturn: false })
-    }
-    if (ronda.turnoJugador === 2) {
-      setJugador2({ ...jugador2, myturn: true })
-      setJugador1({ ...jugador1, myturn: false })
-      setJugador3({ ...jugador3, myturn: false })
-      setJugador4({ ...jugador4, myturn: false })
-    }
-    if (ronda.turnoJugador === 3) {
+    if (ronda.typeRound === "apuesta") {
+      if (ronda.turnoJugadorA === 1) {
+        setJugador1({ ...jugador1, myturn: true })
+        setJugador2({ ...jugador2, myturn: false })
+        setJugador3({ ...jugador3, myturn: false })
+        setJugador4({ ...jugador4, myturn: false })
+      }
+      if (ronda.turnoJugadorA === 2) {
+        setJugador2({ ...jugador2, myturn: true })
+        setJugador1({ ...jugador1, myturn: false })
+        setJugador3({ ...jugador3, myturn: false })
+        setJugador4({ ...jugador4, myturn: false })
+      }
+      if (ronda.turnoJugadorA === 3) {
 
-      setJugador3({ ...jugador3, myturn: true })
-      setJugador1({ ...jugador1, myturn: false })
-      setJugador2({ ...jugador2, myturn: false })
-      setJugador4({ ...jugador4, myturn: false })
+        setJugador3({ ...jugador3, myturn: true })
+        setJugador1({ ...jugador1, myturn: false })
+        setJugador2({ ...jugador2, myturn: false })
+        setJugador4({ ...jugador4, myturn: false })
+      }
+      if (ronda.turnoJugadorA === 4) {
+        setJugador4({ ...jugador4, myturn: true })
+        setJugador1({ ...jugador1, myturn: false })
+        setJugador2({ ...jugador2, myturn: false })
+        setJugador3({ ...jugador3, myturn: false })
+      }
     }
-    if (ronda.turnoJugador === 4) {
-      setJugador4({ ...jugador4, myturn: true })
-      setJugador1({ ...jugador1, myturn: false })
-      setJugador2({ ...jugador2, myturn: false })
-      setJugador3({ ...jugador3, myturn: false })
+  }
+
+  const comprobarMasGrande = () => {
+    if (ronda.ultimaCardApostada[0].valor > ronda.AnteultimaCardApostada[0].valor) {
+      let ganador = ronda.CardGanadoraxRonda[0].id
+      console.log(ganador);
+      setRonda({ ...ronda, CardGanadoraxRonda: ronda.ultimaCardApostada, ganadorRonda: ganador })
+    }
+  };
+
+  const SumarGanada = () => {
+    switch (ronda.CardGanadoraxRonda[0].id) {
+      case 1:
+        setJugador1({ ...jugador1, cardsganadas: jugador1.cardsganadas + 1 });
+        break;
+      case 2:
+        setJugador2({ ...jugador2, cardsganadas: jugador2.cardsganadas + 1 });
+        break;
+      case 3:
+        setJugador3({ ...jugador3, cardsganadas: jugador3.cardsganadas + 1 });
+        break;
+      case 4:
+        setJugador4({ ...jugador4, cardsganadas: jugador4.cardsganadas + 1 });
+        break;
+
+      default:
+        break;
     }
   }
 
 
+  const cambioRonda = () => {
+    if (ronda.cantQueTiraron >= 4) {
+      setRonda({
+        ...ronda,
+        numeroRonda: ronda.numeroRonda + 1,
+        turnoJugador: ronda.CardGanadoraxRonda[0].id, // el ultimo que gana sigue
+        // CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
+        // ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
+        // AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
+        cantQueTiraron: 0
+      })
+
+
+      setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
+      setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
+      setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
+      setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
+
+    }
+  }
+
   useEffect(() => {
-    setRonda({ ...ronda, cardPorRonda: 1, obligado: 4 });//ni bien se monta el componente setea la card
+    setRonda({ ...ronda, cardPorRonda: 3, obligado: 1 });//ni bien se monta el componente setea la card
   }, [])//ya que nunca cambia
+
+
 
 
   useEffect(() => {
     comprobarMasGrande()
     turno()
-
-  }, [jugador1.cardApostada, jugador2.cardApostada, jugador3.cardApostada, jugador4.cardApostada])//ya que nunca cambia
+    cambioRonda()
+  }, [jugador1.cardApostada, jugador2.cardApostada, jugador3.cardApostada, jugador4.cardApostada])//setea la card mas grande
 
   useEffect(() => {
-    resetCardAp()
+    turno()
+  }, [ronda.typeRound])
 
-    if (ronda.numeroRonda < Number(ronda.cardPorRonda)) {
-      setRonda({ ...ronda, numeroRonda: 3 })
-    }
-
-
-
-  }, [ronda.numeroRonda])
+  useEffect(() => {
+    // cambioRonda()
+  }, [ronda.cantQueTiraron])//si todos tiraron cambia la ronda
 
   console.log(ronda);
-  console.log(jugador1);
-  console.log(jugador2);
-  console.log(jugador3);
-  console.log(jugador4);
+  console.log("j1", jugador1);
+  console.log("j2", jugador2);
+  console.log("j3", jugador3);
+  console.log("j4", jugador4);
 
 
   return (
@@ -269,6 +285,7 @@ export default function Game() {
         </p>
         <p>Vuelta: {ronda.vuelta}</p>
         <p>Ronda: {ronda.numeroRonda}</p>
+        <p>turno: jugador{ronda.typeRound === "apuesta" ? ronda.turnoJugadorA : ronda.turnoJugadorR}</p>
       </div>
       <div className={style.infoPropia}>
         <p>Apuesta propia: {jugador1.apuestaP === -1 ? "-" : jugador1.apuestaP} carta/s </p>
@@ -277,11 +294,10 @@ export default function Game() {
         <p>Cumplio: {jugador1.cumplio === true ? '✔' : '❌'}</p>
         <button onClick={mezclar}>Mezclar</button>
         <button onClick={gameInit}>Comenzar Juego</button>
-        {/* <button onClick={comprobarMasGrande}>ComprobarMasGrande</button> */}
-        {/* <button onClick={cumplio}>Cumplio?</button> */}
+
       </div>
 
-      {(ronda.typeRound === 'apuesta') && (ronda.turnoJugador === 1 || ronda.turnoJugador === 2 || ronda.turnoJugador === 3 || ronda.turnoJugador === 4)
+      {(ronda.typeRound === 'apuesta') && (ronda.turnoJugadorA === 1 || ronda.turnoJugadorA === 2 || ronda.turnoJugadorA === 3 || ronda.turnoJugadorA === 4)
         ? <Apuesta
           jugador1={jugador1}
           setJugador1={setJugador1}

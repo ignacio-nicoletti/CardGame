@@ -31,17 +31,15 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
       });
 
       //tiro la card, la saco del mazo propio y la seteo en la apostada
-      
+
       if (ronda.turnoJugador === 1 || ronda.turnoJugador === 2 || ronda.turnoJugador === 3) {
-        
-   
+
         setRonda({
-          ...ronda, turnoJugador: ronda.turnoJugador + 1,ultimaCardApostada: [{ valor, palo, id: jugador.id }],AnteultimaCardApostada:ronda.ultimaCardApostada
-        });//setea la card apostada en la ultima y lo que habia en ultima pasa a ser anteultima
-        
-        
+          ...ronda, turnoJugador: ronda.turnoJugador + 1, ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, cantQueTiraron: ronda.cantQueTiraron + 1
+        });//setea la card apostada en la ultima y lo que habia en ultima pasa a ser anteultima      
+
       } else {
-        setRonda({ ...ronda, turnoJugador: 1,ultimaCardApostada: [{ valor, palo, id: jugador.id }],AnteultimaCardApostada:ronda.ultimaCardApostada })
+        setRonda({ ...ronda, turnoJugador: 1, ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, cantQueTiraron: ronda.cantQueTiraron + 1 })
       }
 
     }
