@@ -19,7 +19,7 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
 
   let filterCard;
   const handlerclick = () => {
-    if (ronda?.typeRound === 'ronda' && jugador.myturn === true) {
+    if (ronda?.typeRound === 'ronda' && jugador.myturnR === true) {
       filterCard = jugador.cardPersona.filter(
         e => e.valor !== valor || e.palo !== palo
       );
@@ -32,14 +32,17 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
 
       //tiro la card, la saco del mazo propio y la seteo en la apostada
 
-      if (ronda.turnoJugador === 1 || ronda.turnoJugador === 2 || ronda.turnoJugador === 3) {
+      if (ronda.turnoJugadorR === 1 || ronda.turnoJugadorR === 2 || ronda.turnoJugadorR === 3) {
 
         setRonda({
-          ...ronda, turnoJugador: ronda.turnoJugador + 1, ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, cantQueTiraron: ronda.cantQueTiraron + 1
+          ...ronda, 
+          ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, 
+          turnoJugadorR: ronda.turnoJugadorR + 1, 
+          cantQueTiraron: ronda.cantQueTiraron + 1
         });//setea la card apostada en la ultima y lo que habia en ultima pasa a ser anteultima      
 
       } else {
-        setRonda({ ...ronda, turnoJugador: 1, ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, cantQueTiraron: ronda.cantQueTiraron + 1 })
+        setRonda({ ...ronda, turnoJugadorR: 1, ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, cantQueTiraron: ronda.cantQueTiraron + 1 })
       }
 
     }

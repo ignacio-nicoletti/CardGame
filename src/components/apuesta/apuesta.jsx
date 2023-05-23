@@ -3,8 +3,8 @@ import style from './apuesta.module.css';
 
 
 const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, jugador3, setJugador4, jugador4, ronda, setRonda }) => {
-  const [apuesta, setApuesta] = useState("")
-  
+  const [apuesta, setApuesta] = useState(0)
+
   const [estadoactivo, setEstadoactivo] = useState({
     card0: false,
     card1: false,
@@ -15,30 +15,35 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
     card6: false,
     card7: false,
   })
-  
+
   const ComienzoTurnoApuesta = () => {
     const turnoJ = ronda.obligado;
     switch (turnoJ) {
       case 1:
-        setRonda({ ...ronda, turnoJugadorA:2 });
+        setRonda({ ...ronda, turnoJugadorA: 2 });
         break;
       case 2:
-        setRonda({ ...ronda, turnoJugadorA:3 });
+        setRonda({ ...ronda, turnoJugadorA: 3 });
         break;
       case 3:
-        setRonda({ ...ronda, turnoJugadorA:4 });
+        setRonda({ ...ronda, turnoJugadorA: 4 });
         break;
       case 4:
-        setRonda({ ...ronda, turnoJugadorA:1 });
+        setRonda({ ...ronda, turnoJugadorA: 1 });
         break;
       default:
         break;
     }
   }
   const cambiotypeRound = () => {
-    if (ronda.cantQueApostaron===4) {
-     setRonda({ ...ronda, typeRound: "ronda" })  
+   if(ronda.cantQueApostaron === 4){
+    
+     if (ronda.obligado === 1 || ronda.obligado === 2 || ronda.obligado === 3) {
+       setRonda({ ...ronda, typeRound: "ronda", turnoJugadorR: ronda.obligado + 1 })
+      } else if(ronda.obligado>=4) { setRonda({ ...ronda, typeRound: "ronda", turnoJugadorR: 1 }) }
     }
+   
+
     // cambio de ronda
   }
   const apuestaGeneral = () => {
@@ -48,9 +53,10 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
   }
 
 
+ 
   const apostar = (event) => {
+    
     setApuesta(event.target.value)
-
     // if (ronda.typeRound === "apuesta" && ronda.turnoJugador === ronda.obligado) {
     //   if (
     //     Number(event.target.value) === 0 &&
@@ -111,20 +117,22 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
     // }//lo hace bien pero una vez que mande el numero, tiene que hacerlo antes
   }
 
+
+
+
   
-
-
- 
   useEffect(() => {
     apuestaGeneral()//suma las apuestas
     cambiotypeRound()
     
-  }, [jugador1.apuestaP,jugador2.apuestaP,jugador3.apuestaP,jugador4.apuestaP,ronda.cantQueApostaron])
-  
+  }, [ronda.cantQueApostaron])
   // jugador1.apuestaP,jugador2.apuestaP,jugador3.apuestaP,jugador4.apuestaP
+  
+  
   useEffect(() => {
     ComienzoTurnoApuesta()//cuando se monta el componente determina quien arranca
   }, [])
+  // jugador1.apuestaP,jugador2.apuestaP,jugador3.apuestaP,jugador4.apuestaP
 
 
 
@@ -134,19 +142,19 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
     switch (turnoJugador) {
       case 1:
         setJugador1({ ...jugador1, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA:2,cantQueApostaron:ronda.cantQueApostaron+1});
+        setRonda({ ...ronda, turnoJugadorA: 2, cantQueApostaron: ronda.cantQueApostaron + 1 });
         break;
       case 2:
         setJugador2({ ...jugador2, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA:3 ,cantQueApostaron:ronda.cantQueApostaron+1});
+        setRonda({ ...ronda, turnoJugadorA: 3, cantQueApostaron: ronda.cantQueApostaron + 1 });
         break;
       case 3:
         setJugador3({ ...jugador3, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA:4,cantQueApostaron:ronda.cantQueApostaron+1});
+        setRonda({ ...ronda, turnoJugadorA: 4, cantQueApostaron: ronda.cantQueApostaron + 1 });
         break;
       case 4:
         setJugador4({ ...jugador4, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA:1,cantQueApostaron:ronda.cantQueApostaron+1});
+        setRonda({ ...ronda, turnoJugadorA: 1, cantQueApostaron: ronda.cantQueApostaron + 1 });
         break;
       default:
         break;
