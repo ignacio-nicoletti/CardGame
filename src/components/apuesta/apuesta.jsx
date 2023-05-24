@@ -36,26 +36,22 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
     }
   }
   const cambiotypeRound = () => {
-   if(ronda.cantQueApostaron === 4){
-    
-     if (ronda.obligado === 1 || ronda.obligado === 2 || ronda.obligado === 3) {
-       setRonda({ ...ronda, typeRound: "ronda", turnoJugadorR: ronda.obligado + 1 })
-      } else if(ronda.obligado>=4) { setRonda({ ...ronda, typeRound: "ronda", turnoJugadorR: 1 }) }
+    if (ronda.cantQueApostaron === 4) {
+      setRonda({ ...ronda, typeRound: "ronda" ,cantQueApostaron:0})   // cambio de ronda
     }
-   
 
-    // cambio de ronda
+
+ 
   }
   const apuestaGeneral = () => {
     let apuestafinal = Number(jugador1.apuestaP) + Number(jugador2.apuestaP) + Number(jugador3.apuestaP) + Number(jugador4.apuestaP)
-    console.log(apuestafinal);
     setRonda({ ...ronda, ApuestaTotal: Number(apuestafinal) });
   }
 
 
- 
+
   const apostar = (event) => {
-    
+
     setApuesta(event.target.value)
     // if (ronda.typeRound === "apuesta" && ronda.turnoJugador === ronda.obligado) {
     //   if (
@@ -118,17 +114,14 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
   }
 
 
-
-
-  
   useEffect(() => {
     apuestaGeneral()//suma las apuestas
     cambiotypeRound()
-    
+
   }, [ronda.cantQueApostaron])
   // jugador1.apuestaP,jugador2.apuestaP,jugador3.apuestaP,jugador4.apuestaP
-  
-  
+
+
   useEffect(() => {
     ComienzoTurnoApuesta()//cuando se monta el componente determina quien arranca
   }, [])

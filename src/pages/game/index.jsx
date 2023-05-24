@@ -138,8 +138,6 @@ export default function Game() {
       }
     }
     if (ronda.typeRound === "ronda") {
-
-
       if (ronda.turnoJugadorR === 1) {
         setJugador1({ ...jugador1, myturnR: true })
         setJugador2({ ...jugador2, myturnR: false })
@@ -197,25 +195,44 @@ export default function Game() {
   }
 
 
-  const cambioRonda = () => {
-    if (ronda.cantQueTiraron >= 4) {
+const setTurnoRound=()=>{
+  
+  let turno=Number(ronda.CardGanadoraxRonda[0].id)
+  
+switch (turno) {
+  case 1: setRonda({...ronda,turnoJugadorR:1})
+    
+    break;
+  case 2: setRonda({...ronda,turnoJugadorR:2})
+    
+    break;
+  case 3: setRonda({...ronda,turnoJugadorR:3})
+    
+    break;
+  case 4: setRonda({...ronda,turnoJugadorR:4})
+    
+    break;
+
+  default:
+    break;
+}
+
+}
+
+  const cambioRonda = () => {   
       setRonda({
         ...ronda,
         numeroRonda: ronda.numeroRonda + 1,
-        turnoJugadorR: ronda.CardGanadoraxRonda[0].id, // el ultimo que gana sigue
         // CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
         // ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
         // AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
         cantQueTiraron: 0
       })
 
-
       setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
       setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
       setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
       setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
-
-    }
   }
 
 
@@ -223,50 +240,84 @@ export default function Game() {
     if (ronda.numeroRonda > Number(ronda.cardPorRonda)) {
       setRonda({
         ...ronda,
-        cardPorRonda: ronda.cardPorRonda + 2,
+        cardPorRonda: 3,
         vuelta:ronda.vuelta+1,
-        // obligado: ronda.obligado + 1,
         CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
         ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
         AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
         cantQueApostaron: 0,
-        cantQueTiraron: 0
+        cantQueTiraron: 0,
+        numeroRonda:0
       })
+
+      setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
+      setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
+      setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
+      setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
+
+
+      if(ronda.obligado===1||ronda.obligado===2||ronda.obligado===3){
+        setRonda({...ronda,obligado:ronda.obligado+1})
+      }
+      else{setRonda({...ronda,obligado:1})}
       console.log("volver a repartir");
     }
 
   }
+  
+const InicioTurno=()=>{
+  if(ronda.numeroRonda===0){
 
-
+    let turno=ronda.obligado 
+    switch (turno) {
+      case 1:setRonda({...ronda,turnoJugadorR:2})
+      break;
+      case 2:setRonda({...ronda,turnoJugadorR:3})
+      break;
+      case 3:setRonda({...ronda,turnoJugadorR:4})
+      break;
+      case 4:setRonda({...ronda,turnoJugadorR:1})
+      break;
+      
+      default:
+        break;
+      }
+      
+    }
+      
+}
+ 
   useEffect(() => {
-    setRonda({ ...ronda, cardPorRonda: 1, obligado: 4, });//ni bien se monta el componente setea la card
+    setRonda({ ...ronda, cardPorRonda: 3, obligado: 4 });//ni bien se monta el componente setea la card
+    InicioTurno()
+    // turno()
   }, [])//ya que nunca cambia
-
-
+  
+  
+  
   useEffect(() => {
-    turno()//asigna quien comienza
-  }, [ronda.typeRound])
-
-  useEffect(() => {
-    comprobarMasGrande()
     turno()
+    comprobarMasGrande();  
     
-  }, [jugador1.cardApostada, jugador2.cardApostada, jugador3.cardApostada, jugador4.cardApostada])//setea la card mas grande
-
-
-  useEffect(() => {
-    turno()
-    cambioRonda()
-  }, [ronda.cantQueTiraron])//si todos tiraron cambia la ronda
-  useEffect(() => {
+    if (ronda.cantQueTiraron === 4) {
+      cambioRonda()
+       SumarGanada()
+    }
+    if (ronda.cantQueTiraron === 0) {
+      setTurnoRound()
+    }
     // cambioDeVuelta()
-  }, [ronda.vuelta])//si todos tiraron cambia la ronda
 
+    console.log("entro");
+    
+  }, [ronda.turnoJugadorR,ronda.typeRound])//setea la card mas grande
+
+  // jugador1.cardApostada, jugador2.cardApostada, jugador3.cardApostada, jugador4.cardApostada
   console.log(ronda);
-  console.log("j1", jugador1);
-  console.log("j2", jugador2);
-  console.log("j3", jugador3);
-  console.log("j4", jugador4);
+  // console.log("j1", jugador1);
+  // console.log("j2", jugador2);
+  // console.log("j3", jugador3);
+  // console.log("j4", jugador4);
 
 
   return (
