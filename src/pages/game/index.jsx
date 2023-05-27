@@ -11,15 +11,15 @@ import { repartir, shuffle } from '@/logica/logica';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Game() {
-  let cantUser = 4; //usuarios conectados
+
 
 
   const [jugador1, setJugador1] = useState({
     id: 1,
     cardPersona: [],
-    apuestaP: 0,
+    apuestaP: null,
     cardsganadas: 0,
-    cardApostada: [{ valor: '', palo: '' }],
+    cardApostada: [{ valor: null, palo: '' }],
     myturnA: false, //boolean
     myturnR: false, //boolean
     cumplio: true, //boolean
@@ -28,9 +28,9 @@ export default function Game() {
   const [jugador2, setJugador2] = useState({
     id: 2,
     cardPersona: [],
-    apuestaP: 0,
+    apuestaP: null,
     cardsganadas: 0,
-    cardApostada: [{ valor: '', palo: '' }],
+    cardApostada: [{ valor: null, palo: '' }],
     myturnA: false, //boolean
     myturnR: false, //booleanA
     cumplio: '', //boolean
@@ -39,9 +39,9 @@ export default function Game() {
   const [jugador3, setJugador3] = useState({
     id: 3,
     cardPersona: [],
-    apuestaP: 0,
+    apuestaP: null,
     cardsganadas: 0,
-    cardApostada: [{ valor: '', palo: '' }],
+    cardApostada: [{ valor: null, palo: '' }],
     myturnA: false, //boolean
     myturnR: false, //boolean
     cumplio: '', //boolean
@@ -50,22 +50,16 @@ export default function Game() {
   const [jugador4, setJugador4] = useState({
     id: 4,
     cardPersona: [],
-    apuestaP: 0,
+    apuestaP: null,
     cardsganadas: 0,
-    cardApostada: [{ valor: '', palo: '' }],
+    cardApostada: [{ valor: null, palo: '' }],
     myturnA: false, //boolean
     myturnR: false, //boolean
     cumplio: '', //boolean
   });
 
-  const [jugadores, setJugadores] = useState({
-    jugador1: "",
-    jugador2: "",
-    jugador3: "",
-    jugador4: "",
-  });
-
   const [ronda, setRonda] = useState({
+    cantUser: 4,//usuarios conectados
     vuelta: 1,//num de vuelta (4 rondas =1 vuelta)
     numeroRonda: 1,//num de ronda
     cardPorRonda: "",//cant de cartas que se reparten
@@ -83,30 +77,22 @@ export default function Game() {
     cantQueTiraron: 0
   });
 
+  const [activo, setActivo] = useState(true)//modal del resultado
+
   const mezclar = () => {
     let baraja = barajar()
     let cartasMezcladas = shuffle(baraja);
-    setJugadores({
-      jugador1: cartasMezcladas.splice(0, ronda.cardPorRonda),
-      jugador2: cartasMezcladas.splice(0, ronda.cardPorRonda),
-      jugador3: cartasMezcladas.splice(0, ronda.cardPorRonda),
-      jugador4: cartasMezcladas.splice(0, ronda.cardPorRonda),
-    });
+   
+    setJugador1({ ...jugador1, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) });
+    setJugador2({ ...jugador2, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda)}),
+      setJugador3({ ...jugador3, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) });
+    setJugador4({ ...jugador4, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) });
 
   };
 
-  const repartir = () => {
-    setJugador1({ ...jugador1, cardPersona: jugadores.jugador1 });
-    setJugador2({ ...jugador2, cardPersona: jugadores.jugador2 });
-    setJugador3({ ...jugador3, cardPersona: jugadores.jugador3 });
-    setJugador4({ ...jugador4, cardPersona: jugadores.jugador4 });
-
-  }
-
-  const gameInit = () => {
-    repartir()
-    setRonda({ ...ronda, typeRound: "apuesta" });
-
+  const gameInit = () => {  
+  mezclar()
+  setRonda({ ...ronda, typeRound: "apuesta" });
   };
 
   const turno = () => {
@@ -195,45 +181,47 @@ export default function Game() {
   }
 
 
-const setTurnoRound=()=>{
-  
-  let turno=Number(ronda.CardGanadoraxRonda[0].id)
-  
-switch (turno) {
-  case 1: setRonda({...ronda,turnoJugadorR:1})
-    
-    break;
-  case 2: setRonda({...ronda,turnoJugadorR:2})
-    
-    break;
-  case 3: setRonda({...ronda,turnoJugadorR:3})
-    
-    break;
-  case 4: setRonda({...ronda,turnoJugadorR:4})
-    
-    break;
+  const setTurnoRound = () => {
 
-  default:
-    break;
-}
+    let turno = Number(ronda.CardGanadoraxRonda[0].id)
 
-}
+    switch (turno) {
+      case 1: setRonda({ ...ronda, turnoJugadorR: 1 })
 
-  const cambioRonda = () => {   
-      setRonda({
-        ...ronda,
-        numeroRonda: ronda.numeroRonda + 1,
-        // CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
-        // ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
-        // AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
-        cantQueTiraron: 0
-      })
+        break;
+      case 2: setRonda({ ...ronda, turnoJugadorR: 2 })
 
-      setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
-      setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
-      setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
-      setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
+        break;
+      case 3: setRonda({ ...ronda, turnoJugadorR: 3 })
+
+        break;
+      case 4: setRonda({ ...ronda, turnoJugadorR: 4 })
+
+        break;
+
+      default:
+        break;
+    }
+
   }
+
+  const cambioRonda = () => {
+    // if (jugador1.cardApostada[0].valor!==null&&jugador2.cardApostada[0].valor!==null&&jugador3.cardApostada[0].valor!==null&&jugador4.cardApostada[0].valor!==null) {
+    setRonda({
+      ...ronda,
+      numeroRonda: ronda.numeroRonda + 1,
+      // CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
+      // ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
+      // AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
+      cantQueTiraron: 0
+    })
+
+    setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
+    setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
+    setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
+    setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
+  }
+// }
 
 
   const cambioDeVuelta = () => {
@@ -241,13 +229,13 @@ switch (turno) {
       setRonda({
         ...ronda,
         cardPorRonda: 3,
-        vuelta:ronda.vuelta+1,
+        vuelta: ronda.vuelta + 1,
         CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
         ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
         AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
         cantQueApostaron: 0,
         cantQueTiraron: 0,
-        numeroRonda:0
+        numeroRonda: 0
       })
 
       setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
@@ -256,76 +244,69 @@ switch (turno) {
       setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
 
 
-      if(ronda.obligado===1||ronda.obligado===2||ronda.obligado===3){
-        setRonda({...ronda,obligado:ronda.obligado+1})
+      if (ronda.obligado === 1 || ronda.obligado === 2 || ronda.obligado === 3) {
+        setRonda({ ...ronda, obligado: ronda.obligado + 1 })
       }
-      else{setRonda({...ronda,obligado:1})}
-      console.log("volver a repartir");
+      else { setRonda({ ...ronda, obligado: 1 }) }
+      // console.log("volver a repartir");
     }
 
   }
-  
-const InicioTurno=()=>{
-  if(ronda.numeroRonda===0){
 
-    let turno=ronda.obligado 
-    switch (turno) {
-      case 1:setRonda({...ronda,turnoJugadorR:2})
-      break;
-      case 2:setRonda({...ronda,turnoJugadorR:3})
-      break;
-      case 3:setRonda({...ronda,turnoJugadorR:4})
-      break;
-      case 4:setRonda({...ronda,turnoJugadorR:1})
-      break;
-      
-      default:
-        break;
+  const InicioTurno = () => {
+    if (ronda.numeroRonda === 0) {
+      let turno = ronda.obligado
+      switch (turno) {
+        case 1: setRonda({ ...ronda, turnoJugadorR: 2 })
+          break;
+        case 2: setRonda({ ...ronda, turnoJugadorR: 3 })
+          break;
+        case 3: setRonda({ ...ronda, turnoJugadorR: 4 })
+          break;
+        case 4: setRonda({ ...ronda, turnoJugadorR: 1 })
+          break;
+
+        default:
+          break;
       }
-      
     }
-      
-}
- 
+  }
+
   useEffect(() => {
     setRonda({ ...ronda, cardPorRonda: 3, obligado: 4 });//ni bien se monta el componente setea la card
     InicioTurno()
-    // turno()
+    turno()
   }, [])//ya que nunca cambia
   
   
   
   useEffect(() => {
     turno()
-    comprobarMasGrande();  
-    
-    if (ronda.cantQueTiraron === 4) {
+    comprobarMasGrande();
+
+  
+   
+    // setTurnoRound() 
+   // cambioRonda()
+  // SumarGanada()
+ // cambioDeVuelta()
+
+
+  }, [ronda.turnoJugadorR, ronda.typeRound])//setea la card mas grande
+
+  useEffect(()=>{
+    if(ronda.cantQueTiraron===4){
+
       cambioRonda()
-       SumarGanada()
     }
-    if (ronda.cantQueTiraron === 0) {
-      setTurnoRound()
-    }
-    // cambioDeVuelta()
-
-    console.log("entro");
-    
-  }, [ronda.turnoJugadorR,ronda.typeRound])//setea la card mas grande
-
-  // jugador1.cardApostada, jugador2.cardApostada, jugador3.cardApostada, jugador4.cardApostada
-  console.log(ronda);
-  // console.log("j1", jugador1);
-  // console.log("j2", jugador2);
-  // console.log("j3", jugador3);
-  // console.log("j4", jugador4);
-
+  },[ronda.cantQueTiraron])
 
   return (
     <div className={style.contain}>
       <div className={style.containCardPropias}>
         <div className={style.CardPropias}>
 
-          {jugador1.cardPersona.map((card, index) => (
+          {jugador1?.cardPersona?.map((card, index) => (
 
 
             <Cards
@@ -342,7 +323,7 @@ const InicioTurno=()=>{
         </div>
       </div>
 
-      {cantUser === 4
+      {ronda.cantUser === 4
         ? <div className={style.jugadorestres}>
           <div className={style.jugador2}>
             <Jugadores
@@ -398,11 +379,11 @@ const InicioTurno=()=>{
         <p>Ganadas: {jugador1.cardsganadas}</p>
         <p>Obligado: jugador{ronda.obligado}</p>
         <p>Cumplio: {jugador1.cumplio === true ? '✔' : '❌'}</p>
-        <button onClick={mezclar}>Mezclar</button>
+        {/* <button onClick={mezclar}>Mezclar</button> */}
         <button onClick={gameInit}>Comenzar Juego</button>
 
       </div>
-
+      {/* (ronda.typeRound === 'apuesta') &&  */}
       {(ronda.typeRound === 'apuesta') && (ronda.turnoJugadorA === 1 || ronda.turnoJugadorA === 2 || ronda.turnoJugadorA === 3 || ronda.turnoJugadorA === 4)
         ? <Apuesta
           jugador1={jugador1}
@@ -424,6 +405,19 @@ const InicioTurno=()=>{
             <Cards key={index} valor={card.valor} palo={card.palo} />
           ))}
       </div>
+      {/* {activo===true?(
+<div>
+
+
+<div>
+
+</div>
+
+
+</div> 
+):""
+} */}
+
     </div>
   );
 }
