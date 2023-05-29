@@ -108,7 +108,7 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
   useEffect(() => {
     cambiotypeRound()
 
-  }, [ronda.cantQueApostaron])
+  }, [ronda.turnoJugadorA])
  
   useEffect(() => {
     ComienzoTurnoApuesta()//cuando se monta el componente determina quien arranca
@@ -119,19 +119,19 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
     switch (turnoJugador) {
       case 1:
         setJugador1({ ...jugador1, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA: 2, cantQueApostaron: ronda.cantQueApostaron + 1,ApuestaTotal: Number(apuesta)  });
+        setRonda({ ...ronda, turnoJugadorA: 2,ApuestaTotal: Number(apuesta)  });
         break;
       case 2:
         setJugador2({ ...jugador2, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA: 3, cantQueApostaron: ronda.cantQueApostaron + 1,ApuestaTotal:ronda.ApuestaTotal+Number(apuesta) });
+        setRonda({ ...ronda, turnoJugadorA: 3,ApuestaTotal:ronda.ApuestaTotal+Number(apuesta) });
         break;
       case 3:
         setJugador3({ ...jugador3, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA: 4, cantQueApostaron: ronda.cantQueApostaron + 1,ApuestaTotal:ronda.ApuestaTotal+Number(apuesta) });
+        setRonda({ ...ronda, turnoJugadorA: 4,ApuestaTotal:ronda.ApuestaTotal+Number(apuesta) });
         break;
       case 4:
         setJugador4({ ...jugador4, apuestaP: Number(apuesta) });
-        setRonda({ ...ronda, turnoJugadorA: 1, cantQueApostaron: ronda.cantQueApostaron + 1,ApuestaTotal:ronda.ApuestaTotal+Number(apuesta)  });
+        setRonda({ ...ronda, turnoJugadorA: 1,ApuestaTotal:ronda.ApuestaTotal+Number(apuesta)  });
         break;
       default:
         break;

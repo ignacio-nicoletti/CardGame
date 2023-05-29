@@ -1,4 +1,3 @@
-
 export function shuffle (array) {
     let currentIndex = array.length;
     let temporaryValue, randomIndex;

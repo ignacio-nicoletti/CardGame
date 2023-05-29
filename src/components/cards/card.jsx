@@ -36,18 +36,23 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
 
         setRonda({
           ...ronda, 
-          ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, 
+          AnteultimaCardApostada: ronda.ultimaCardApostada, 
+          ultimaCardApostada: [{ valor, palo, id: jugador.id }], 
           turnoJugadorR: ronda.turnoJugadorR + 1, 
           cantQueTiraron: ronda.cantQueTiraron + 1
         });//setea la card apostada en la ultima y lo que habia en ultima pasa a ser anteultima      
 
       } else {
-        setRonda({ ...ronda, turnoJugadorR: 1, ultimaCardApostada: [{ valor, palo, id: jugador.id }], AnteultimaCardApostada: ronda.ultimaCardApostada, cantQueTiraron: ronda.cantQueTiraron + 1 })
+        setRonda({ ...ronda, turnoJugadorR: 1, 
+          AnteultimaCardApostada: ronda.ultimaCardApostada, 
+          ultimaCardApostada: [{ valor, palo, id: jugador.id }], 
+          cantQueTiraron: ronda.cantQueTiraron + 1 })
       }
-
+    
     }
     //cambio de turno al que me sigue y seteo laultima card con el id y paso la ult a la anteult
   };
+  // CardGanadoraxRonda[0].valor
 
 
 

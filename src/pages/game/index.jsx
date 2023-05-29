@@ -68,12 +68,11 @@ export default function Game() {
     turnoJugadorR: 1, //1j 2j 3j 4j ronda
     obligado: "",//numero de jugador obligado
     ApuestaTotal: 0, //suma de la apuesta de todos
-    CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
-    ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
-    AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
+    CardGanadoraxRonda: [{ valor: null, palo: '', id: '' }],
+    ultimaCardApostada: [{ valor: null, palo: '', id: '' }],
+    AnteultimaCardApostada: [{ valor: null, palo: '', id: '' }],
     points: 5, //puntos que suma
     ganadorRonda: "",
-    cantQueApostaron: 0,
     cantQueTiraron: 0
   });
 
@@ -82,17 +81,17 @@ export default function Game() {
   const mezclar = () => {
     let baraja = barajar()
     let cartasMezcladas = shuffle(baraja);
-   
+
     setJugador1({ ...jugador1, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) });
-    setJugador2({ ...jugador2, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda)}),
-      setJugador3({ ...jugador3, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) });
+    setJugador2({ ...jugador2, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) }),
+    setJugador3({ ...jugador3, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) });
     setJugador4({ ...jugador4, cardPersona: cartasMezcladas.splice(0, ronda.cardPorRonda) });
 
   };
 
-  const gameInit = () => {  
-  mezclar()
-  setRonda({ ...ronda, typeRound: "apuesta" });
+  const gameInit = () => {
+    mezclar()
+    setRonda({ ...ronda, typeRound: "apuesta" });
   };
 
   const turno = () => {
@@ -156,7 +155,7 @@ export default function Game() {
     if (ronda.ultimaCardApostada[0].valor > ronda.AnteultimaCardApostada[0].valor) {
       setRonda({ ...ronda, CardGanadoraxRonda: ronda.ultimaCardApostada })
     }
-
+   
   };
 
 
@@ -206,23 +205,25 @@ export default function Game() {
   }
 
   const cambioRonda = () => {
-    // if (jugador1.cardApostada[0].valor!==null&&jugador2.cardApostada[0].valor!==null&&jugador3.cardApostada[0].valor!==null&&jugador4.cardApostada[0].valor!==null) {
+  //  if (jugador1.cardApostada[0].valor!==null&&jugador2.cardApostada[0].valor!==null&&jugador3.cardApostada[0].valor!==null&&jugador4.cardApostada[0].valor!==null) {
+     
+      
     setRonda({
       ...ronda,
       numeroRonda: ronda.numeroRonda + 1,
       // CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
       // ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
       // AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
-      cantQueTiraron: 0
+      // cantQueTiraron: 0
     })
 
-    setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
-    setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
-    setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
-    setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
+    // setJugador1({ ...jugador1, cardApostada: [{ valor: '', palo: '' }] });
+    // setJugador2({ ...jugador2, cardApostada: [{ valor: '', palo: '' }] });
+    // setJugador3({ ...jugador3, cardApostada: [{ valor: '', palo: '' }] });
+    // setJugador4({ ...jugador4, cardApostada: [{ valor: '', palo: '' }] });
+  // }
+  
   }
-// }
-
 
   const cambioDeVuelta = () => {
     if (ronda.numeroRonda > Number(ronda.cardPorRonda)) {
@@ -272,34 +273,39 @@ export default function Game() {
     }
   }
 
+  
   useEffect(() => {
     setRonda({ ...ronda, cardPorRonda: 3, obligado: 4 });//ni bien se monta el componente setea la card
     InicioTurno()
     turno()
-  }, [])//ya que nunca cambia
-  
-  
+  }, [])
   
   useEffect(() => {
-    turno()
+    turno() 
     comprobarMasGrande();
-
-  
-   
-    // setTurnoRound() 
-   // cambioRonda()
-  // SumarGanada()
- // cambioDeVuelta()
-
-
-  }, [ronda.turnoJugadorR, ronda.typeRound])//setea la card mas grande
-
-  useEffect(()=>{
-    if(ronda.cantQueTiraron===4){
-
-      cambioRonda()
+    
+    if (ronda.cantQueTiraron === 4) {
+      // setTurnoRound() 
+      
     }
-  },[ronda.cantQueTiraron])
+      
+     
+        
+        
+        
+        // SumarGanada()
+        // cambioDeVuelta()
+        
+        
+      }, [ronda.turnoJugadorR, ronda.typeRound,ronda.cantQueTiraron])//setea la card mas grande
+      
+      useEffect(()=>{
+        if(ronda.turnoJugadorR===ronda.obligado){
+          // cambioRonda()
+        } 
+           
+        
+      },[ronda.turnoJugadorR])
 
   return (
     <div className={style.contain}>
