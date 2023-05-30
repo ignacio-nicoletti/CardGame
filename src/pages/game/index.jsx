@@ -73,7 +73,8 @@ export default function Game() {
     AnteultimaCardApostada: [{ valor: null, palo: '', id: '' }],
     points: 5, //puntos que suma
     ganadorRonda: "",
-    cantQueTiraron: 0
+    cantQueTiraron: 0,
+    arrayCard:[]
   });
 
   const [activo, setActivo] = useState(true)//modal del resultado
@@ -151,12 +152,14 @@ export default function Game() {
     }
   }
 
-  const comprobarMasGrande = () => {
-    if (ronda.ultimaCardApostada[0].valor > ronda.AnteultimaCardApostada[0].valor) {
-      setRonda({ ...ronda, CardGanadoraxRonda: ronda.ultimaCardApostada })
-    }
-   
+  const comprobarMasGrande = (array) => {
+    let min = Math.min(array)
+    let minposition=array.indexOf(min)
+    let newArray=array.splice(minposition,1)
+    return newArray
   };
+
+
 
 
   const SumarGanada = () => {
@@ -178,7 +181,6 @@ export default function Game() {
         break;
     }
   }
-
 
   const setTurnoRound = () => {
 
@@ -205,12 +207,12 @@ export default function Game() {
   }
 
   const cambioRonda = () => {
-  //  if (jugador1.cardApostada[0].valor!==null&&jugador2.cardApostada[0].valor!==null&&jugador3.cardApostada[0].valor!==null&&jugador4.cardApostada[0].valor!==null) {
-     
-      
-    setRonda({
-      ...ronda,
-      numeroRonda: ronda.numeroRonda + 1,
+  //  if (jugador1.cardApostada[0].valor!==null&&jugador2.cardApostada[0].valor!==null&&jugador3.cardApostada[0].valor!==null&&jugador4.cardApostada[0].valor!==null) {  
+    setRonda(prev=>{
+prev.numeroRonda+=1
+
+      // ...ronda,
+      // numeroRonda: ronda.numeroRonda + 1,
       // CardGanadoraxRonda: [{ valor: '', palo: '', id: '' }],
       // ultimaCardApostada: [{ valor: '', palo: '', id: '' }],
       // AnteultimaCardApostada: [{ valor: '', palo: '', id: '' }],
@@ -282,17 +284,26 @@ export default function Game() {
   
   useEffect(() => {
     turno() 
-    comprobarMasGrande();
-    
+
+
+if(ronda.arrayCard.length===2){
+  let ganador=comprobarMasGrande(ronda.arrayCard);
+  setRonda({...ronda,arrayCard:ganador,CardGanadoraxRonda:ganador
+  })
+  
+  console.log(ganador);
+  console.log(ronda);
+
+}
+
     if (ronda.cantQueTiraron === 4) {
+     
+        // cambioRonda()
+        
+     
       // setTurnoRound() 
       
     }
-      
-     
-        
-        
-        
         // SumarGanada()
         // cambioDeVuelta()
         
@@ -301,7 +312,6 @@ export default function Game() {
       
       useEffect(()=>{
         if(ronda.turnoJugadorR===ronda.obligado){
-          // cambioRonda()
         } 
            
         
