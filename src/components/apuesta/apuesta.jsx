@@ -35,17 +35,17 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
         break;
     }
   }
+
   const cambiotypeRound = () => {
     if (jugador1.apuestaP!==null&&jugador2.apuestaP!==null&&jugador3.apuestaP!==null&&jugador4.apuestaP!==null) {
       setRonda({ ...ronda, typeRound: "ronda"})   // cambio de ronda
     }
   }
 
-
   const apostar = (event) => {
 
     setApuesta(event.target.value)
-    if (ronda.typeRound === "apuesta" && ronda.turnoJugador === ronda.obligado) {
+    if (ronda.typeRound === "apuesta" && ronda.turnoJugadorA === ronda.obligado) {
       if (
         Number(event.target.value) === 0 &&
         Number(ronda.cardPorRonda) ===
@@ -142,7 +142,7 @@ const Apuesta = ({ setJugador1, jugador1, setJugador2, jugador2, setJugador3, ju
     <div className={style.contain}>
       <p>jugador {ronda.turnoJugadorA}</p>
 
-      <select name="select" onClick={(event) => apostar(event)}>
+      <select name="select"  onChange={(event) => apostar(event)}>
         <option value={"Elige tu apuesta"} disabled={true}> Elige tu apuesta </option>
         {[...Array(ronda.cardPorRonda + 1)].map((_, index) =>(
           <option
