@@ -7,17 +7,15 @@
   font-family: "Bebas Neue", sans-serif;
 }
 
-.containCardPropias {
-  display: flex;
-  position: absolute;
-  justify-content: center;
-  top: 75%;
-  left: 25%;
-}
+
 
 .CardPropias {
   display: flex;
+  flex-direction: row;
+  position:relative;
   gap: 10px;
+  top: 75%;
+  left: 25%;
 }
 
 .CardPropias:hover {

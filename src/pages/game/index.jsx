@@ -405,7 +405,7 @@ export default function Game() {
   useEffect(() => {
     let numObligado = generarObligado()
     if (ronda.vuelta === 1) {
-      setRonda({ ...ronda, cardPorRonda: 1, obligado: 4 });//ni bien se monta el componente setea la card
+      setRonda({ ...ronda, cardPorRonda: 7, obligado: 4 });//ni bien se monta el componente setea la card
     }
   }, [])
 
@@ -470,11 +470,10 @@ export default function Game() {
 
   return (
     <div className={style.contain}>
-      <div className={style.containCardPropias}>
+      {/* <div className={style.containCardPropias}> */}
         <div className={style.CardPropias}>
-
+{/* corregir estas clases */}
           {jugador1?.cardPersona?.map((card, index) => (
-
 
             <Cards
               key={index}
@@ -488,7 +487,7 @@ export default function Game() {
 
           ))}
         </div>
-      </div>
+      {/* </div> */}
 
       {ronda.cantUser === 4
         ? <div className={style.jugadorestres}>

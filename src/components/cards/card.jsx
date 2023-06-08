@@ -55,8 +55,8 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
   };
 
   return (
-    <div className={styles.spanishDeck}>
-      <div className={styles.valueContain} onClick={handlerclick}>
+    <div className={styles.spanishDeck} onClick={handlerclick}>
+      <div className={styles.valueContain} >
 
         <p style={{ display: 'flex', alignSelf: 'flex-end' }}>{valor}</p>
         <Image
@@ -65,7 +65,7 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
           width={30}
           height={30}
           style={{ display: 'flex', alignSelf: 'center' }}
-        />
+          />
         <p style={{ display: 'flex', alignSelf: 'flex-start' }}>{valor}</p>
       </div>
     </div>
