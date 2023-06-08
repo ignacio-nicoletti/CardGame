@@ -24,7 +24,7 @@ export default function Game() {
     myturnA: false, //boolean
     myturnR: false, //boolean
     cumplio: false, //boolean
-    puntos:0
+    puntos: 0
 
   });
   const [jugador2, setJugador2] = useState({
@@ -36,7 +36,7 @@ export default function Game() {
     myturnA: false, //boolean
     myturnR: false, //booleanA
     cumplio: false, //boolean
-    puntos:0
+    puntos: 0
   });
   const [jugador3, setJugador3] = useState({
     id: 3,
@@ -47,7 +47,7 @@ export default function Game() {
     myturnA: false, //boolean
     myturnR: false, //boolean
     cumplio: false, //boolean
-    puntos:0
+    puntos: 0
   });
   const [jugador4, setJugador4] = useState({
     id: 4,
@@ -58,7 +58,7 @@ export default function Game() {
     myturnA: false, //boolean
     myturnR: false, //boolean
     cumplio: false, //boolean
-    puntos:0
+    puntos: 0
   });
 
   const [ronda, setRonda] = useState({
@@ -66,7 +66,7 @@ export default function Game() {
     vuelta: 1,//num de vuelta (4 rondas =1 vuelta)
     numeroRonda: 1,//num de ronda
     cardPorRonda: null,//cant de cartas que se reparten
-    typeRound: '', //apuesta o ronda
+    typeRound: "", //apuesta o ronda
     turnoJugadorA: 1, //1j 2j 3j 4j apuesta
     turnoJugadorR: 1, //1j 2j 3j 4j ronda
     obligado: null,//numero de jugador obligado
@@ -92,19 +92,18 @@ export default function Game() {
 
   };
 
-  const generarObligado=()=>{
-    let min=1;
-    let max=4;
-    let obligado=Math.floor((Math.random() * (max - min + 1)) + min);
+  const generarObligado = () => {
+    let min = 1;
+    let max = 4;
+    let obligado = Math.floor((Math.random() * (max - min + 1)) + min);
     return obligado
-  } 
+  }
 
   const gameInit = () => {
-  
-    mezclar()
-    setRonda({ ...ronda, typeRound: "apuesta",ApuestaTotal: 0, });
-   
-
+    if (ronda.vuelta === 1) {
+      setRonda({ ...ronda, typeRound: "apuesta"});
+      mezclar()
+    }
   };
 
   const turno = () => {
@@ -210,7 +209,13 @@ export default function Game() {
   }
 
   const setTurnoRound = () => {
-    let turno = Number(ronda.CardGanadoraxRonda[0].id)
+    let turno
+    if (ronda.CardGanadoraxRonda[0].id === null) {
+      turno = ronda.obligado + 1
+    }
+    else {
+      turno = Number(ronda.CardGanadoraxRonda[0].id)
+    }
 
     switch (turno) {
       case 1: setRonda({
@@ -258,215 +263,211 @@ export default function Game() {
     })
   }
 
-const Cumplio=()=>{
-if(jugador1.apuestaP===jugador1.cardsganadas){
-  setJugador1({...jugador1,cumplio:true})
-}
-if(jugador2.apuestaP===jugador2.cardsganadas){
-  setJugador2({...jugador2,cumplio:true})
-}3
-if(jugador3.apuestaP===jugador3.cardsganadas){
-  setJugador3({...jugador3,cumplio:true})
-}
-if(jugador4.apuestaP===jugador4.cardsganadas){
-  setJugador4({...jugador4,cumplio:true})
-}
+  const Cumplio = () => {
+    if (jugador1.apuestaP === jugador1.cardsganadas) {
+      setJugador1({ ...jugador1, cumplio: true })
+    }
+    if (jugador2.apuestaP === jugador2.cardsganadas) {
+      setJugador2({ ...jugador2, cumplio: true })
+    }
+    if (jugador3.apuestaP === jugador3.cardsganadas) {
+      setJugador3({ ...jugador3, cumplio: true })
+    }
+    if (jugador4.apuestaP === jugador4.cardsganadas) {
+      setJugador4({ ...jugador4, cumplio: true })
+    }
+  }
 
+  const puntos = () => {
+    if (jugador1.cumplio === true) {
+      setJugador1({ ...jugador1, puntos: jugador1.puntos + 5 + jugador1.cardsganadas })
+    }
+    if (jugador2.cumplio === true) {
+      setJugador2({ ...jugador2, puntos: jugador2.puntos + 5 + jugador2.cardsganadas })
+    }
+    if (jugador3.cumplio === true) {
+      4
+      setJugador3({ ...jugador3, puntos: jugador3.puntos + 5 + jugador3.cardsganadas })
+    }
+    if (jugador4.cumplio === true) {
+      setJugador4({ ...jugador1, puntos: jugador4.puntos + 5 + jugador4.cardsganadas })
+    }
 
-}
-
-const puntos=()=>{
-if(jugador1.cumplio===true){
-  setJugador1({...jugador1,puntos:jugador1.puntos+5+jugador1.cardsganadas})
-}
-if(jugador2.cumplio===true){
-  setJugador2({...jugador2,puntos:jugador2.puntos+5+jugador2.cardsganadas})
-}
-if(jugador3.cumplio===true){4
-  setJugador3({...jugador3,puntos:jugador3.puntos+5+jugador3.cardsganadas})
-}
-if(jugador4.cumplio===true){
-  setJugador4({...jugador1,puntos:jugador4.puntos+5+jugador4.cardsganadas})
-}
-}
-
+  }
 
   const cambioDeVuelta = () => {
-    if(ronda.cardPorRonda===1&&ronda.numeroRonda===2){
+    if (ronda.cardPorRonda === 1 && ronda.numeroRonda === 2) {
       setRonda({
         ...ronda,
-        vuelta:ronda.vuelta+1,
+        vuelta: ronda.vuelta + 1,
         cantQueApostaron: 0,
         cantQueTiraron: 0,
-        numeroRonda: 0,
-        cardPorRonda:ronda.cardPorRonda+2
+        numeroRonda: 1,
+        cardPorRonda: ronda.cardPorRonda + 2
       })
     }
-    if(ronda.cardPorRonda===3&&ronda.numeroRonda===4){
+    if (ronda.cardPorRonda === 3 && ronda.numeroRonda === 4) {
       setRonda({
         ...ronda,
-        vuelta:ronda.vuelta+1,
+        vuelta: ronda.vuelta + 1,
         cantQueApostaron: 0,
         cantQueTiraron: 0,
-        numeroRonda: 0,
-        cardPorRonda:ronda.cardPorRonda+2
+        numeroRonda: 1,
+        cardPorRonda: ronda.cardPorRonda + 2
 
       })
     }
-    if(ronda.cardPorRonda===5&&ronda.numeroRonda===6){
+    if (ronda.cardPorRonda === 5 && ronda.numeroRonda === 6) {
       setRonda({
         ...ronda,
-        vuelta:ronda.vuelta+1,
+        vuelta: ronda.vuelta + 1,
         cantQueApostaron: 0,
         cantQueTiraron: 0,
-        numeroRonda: 0,
-        cardPorRonda:ronda.cardPorRonda+2
+        numeroRonda: 1,
+        cardPorRonda: ronda.cardPorRonda + 2
       })
     }
-    if(ronda.cardPorRonda===7&&ronda.numeroRonda===8){
+    if (ronda.cardPorRonda === 7 && ronda.numeroRonda === 8) {
       setRonda({
         ...ronda,
-        vuelta:ronda.vuelta+1,
+        vuelta: ronda.vuelta + 1,
         cantQueApostaron: 0,
         cantQueTiraron: 0,
-        numeroRonda: 0,
-        cardPorRonda:1
+        numeroRonda: 1,
+        cardPorRonda: 1
       })
     }
   }
 
-  const resetPlayers=()=>{
+  const resetPlayers = () => {
 
-    setJugador1({ 
+    setJugador1({
       ...jugador1,
       cardApostada: [{ valor: null, palo: '' }],
-      apuestaP:null, 
-      myturnA: false, 
-      myturnR: false
+      apuestaP: null,
+      // myturnA: false,
+      // myturnR: false,
+      cumplio: false
     })
-    setJugador2({ 
+    setJugador2({
       ...jugador2,
-    cardApostada: [{ valor: null, palo: '' }],
-    apuestaP:null, 
-    myturnA: false, 
-    myturnR: false})
-    setJugador3({ 
+      cardApostada: [{ valor: null, palo: '' }],
+      apuestaP: null,
+      // myturnA: false,
+      // myturnR: false,
+      cumplio: false
+    })
+    setJugador3({
       ...jugador3,
       cardApostada: [{ valor: null, palo: '' }],
-      apuestaP:null, 
-      myturnA: false, 
-      myturnR: false})
-    setJugador4({ 
+      apuestaP: null,
+      // myturnA: false,
+      // myturnR: false,
+      cumplio: false
+    })
+    setJugador4({
       ...jugador4,
       cardApostada: [{ valor: null, palo: '' }],
-      apuestaP:null, 
-      myturnA: false, 
-      myturnR: false})
-  
-  }
-  
+      apuestaP: null,
+      // myturnA: false,
+      // myturnR: false,
+      cumplio: false
+    })
 
-const resetRound=()=>{
-
-  if(ronda.obligado===1||ronda.obligado===2||ronda.obligado===3){
-    setRonda({ ...ronda, 
-      typeRound: "apuesta",
-      ApuestaTotal: 0 ,
-      obligado:ronda.obligado+1,
-      CardGanadoraxRonda:[{ valor: null, palo: '', id: '' }],
-      cantQueApostaron:0
-    });
-  }
-  else{
-    setRonda({ ...ronda, 
-      typeRound: "apuesta",ApuestaTotal: 0,
-      bligado:1,
-      CardGanadoraxRonda:[{ valor: null, palo: '', id: '' }],
-      cantQueApostaron:0
-    });
   }
 
+  const resetRound = () => {
 
-  setJugador1({ 
-    ...jugador1,
-    cardApostada: [{ valor: null, palo: '' }],
-    apuestaP:null, 
-    myturnA: false, 
-    myturnR: false
-  })
-  setJugador2({ 
-    ...jugador2,
-  cardApostada: [{ valor: null, palo: '' }],
-  apuestaP:null, 
-  myturnA: false, 
-  myturnR: false})
-  setJugador3({ 
-    ...jugador3,
-    cardApostada: [{ valor: null, palo: '' }],
-    apuestaP:null, 
-    myturnA: false, 
-    myturnR: false})
-  setJugador4({ 
-    ...jugador4,
-    cardApostada: [{ valor: null, palo: '' }],
-    apuestaP:null, 
-    myturnA: false, 
-    myturnR: false})
+    if (ronda.obligado === 1 || ronda.obligado === 2 || ronda.obligado === 3) {
+      setRonda({
+        ...ronda,
+        typeRound: "apuesta",
+        ApuestaTotal: 0,
+        obligado: ronda.obligado + 1,
+        CardGanadoraxRonda: [{ valor: null, palo: '', id: '' }],
+        cantQueApostaron: 0,
+      });
+    }
+    else {
+      setRonda({
+        ...ronda,
+        typeRound: "apuesta", ApuestaTotal: 0,
+        obligado: 1,
+        CardGanadoraxRonda: [{ valor: null, palo: '', id: '' }],
+        cantQueApostaron: 0,
+      });
+    }
 
-  mezclar()
- 
-}
+
+  }
 
 
   useEffect(() => {
-    let numObligado=generarObligado()
-    setRonda({ ...ronda, cardPorRonda: 1, obligado:4});//ni bien se monta el componente setea la card
-    turno()
+    let numObligado = generarObligado()
+    if (ronda.vuelta === 1) {
+      setRonda({ ...ronda, cardPorRonda: 1, obligado: 4 });//ni bien se monta el componente setea la card
+    }
   }, [])
 
   useEffect(() => {
     if (ronda.cantQueTiraron > 0) {
       AsignarMayor(ronda.ultimaCardApostada[0], ronda.AnteultimaCardApostada[0])
-    }
-    turno()
-    
-  }, [ronda.cantQueTiraron, ronda.typeRound, ronda.numeroRonda])//setea la card mas grande
+    }//setea la card mas grande
+    turno()//no borrar turno
+  }, [ronda.cantQueTiraron, ronda.typeRound, ronda.numeroRonda])
 
   useEffect(() => {
     if (ronda.cantQueTiraron === 4) {
       cambioRonda()
       SumarGanada()
     }
-  }, [jugador1.myturnR, jugador2.myturnR, jugador3.myturnR, jugador4.myturnR])
 
+    
+  }, [jugador1.myturnR, jugador2.myturnR, jugador3.myturnR, jugador4.myturnR])
+  
   useEffect(() => {
     if (ronda.numeroRonda > 1) {
       setTurnoRound()
       cambioDeVuelta()
-    } 
+    }
+    turno()
   }, [ronda.numeroRonda])
 
   useEffect(() => {
     turno()
-  }, [ronda.turnoJugadorR])
+  }, [ronda.turnoJugadorR, ronda.vuelta, ronda.typeRound])
 
-  useEffect(()=>{
+  useEffect(() => {
     Cumplio()
-    if(ronda.vuelta>1){
-   
-      setTimeout(() => {
-        
-        // resetPlayers()
-        // resetRound() 
-      }, 2000);
-      
+  }, [ronda.vuelta])
+
+  useEffect(() => {
+    if (ronda.vuelta > 1) {
+      puntos()
     }
-  },[ronda.vuelta])
-  
-  useEffect(()=>{
-    puntos()
-  },[jugador1.cumplio,jugador2.cumplio,jugador3.cumplio,jugador4.cumplio])
-  
+  }, [jugador1.cumplio, jugador2.cumplio, jugador3.cumplio, jugador4.cumplio])
+
+  useEffect(() => {
+    if (ronda.vuelta > 1) {
+      setTimeout(() => {
+        resetPlayers()
+        resetRound()
+      }, 1000);
+    }
+    turno()
+  }, [jugador1.puntos, jugador2.puntos, jugador3.puntos, jugador4.puntos])
+
+  useEffect(() => {
+    if (ronda.vuelta > 1) {
+
+       if (ronda.typeRound === 'apuesta') {
+      //  if (ronda.numeroRonda==1) {
+
+         mezclar()
+        }
+      }
+  }, [ronda.typeRound])
+
   return (
     <div className={style.contain}>
       <div className={style.containCardPropias}>
@@ -528,7 +529,7 @@ const resetRound=()=>{
       <div className={style.infoPartida}>
         <p>tipo: {ronda.typeRound} </p>
         <p>Cartas Repartidas: {ronda.cardPorRonda} </p>
-        <p>Apuesta General: {ronda.ApuestaTotal}</p>
+        <p>Apuesta total: {ronda.ApuestaTotal}</p>
         <p>
           Carta Ganadora:
 
@@ -549,9 +550,9 @@ const resetRound=()=>{
         <button onClick={gameInit}>Comenzar Juego</button>
 
       </div>
-      {/* (ronda.typeRound === 'apuesta') &&  */}
-      {(ronda.typeRound === 'apuesta') && (ronda.turnoJugadorA === 1 || ronda.turnoJugadorA === 2 || ronda.turnoJugadorA === 3 || ronda.turnoJugadorA === 4)
-        ? <Apuesta
+      {(ronda.typeRound === 'apuesta') ?
+
+        <Apuesta
           jugador1={jugador1}
           setJugador1={setJugador1}
           jugador2={jugador2}
