@@ -9,7 +9,6 @@ import oro from '../../assets/valores/oro.png';
 
 const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda,border }) => {
   
-  console.log(border);
   let imgPalo = {
     oro: oro,
     espada: espada,

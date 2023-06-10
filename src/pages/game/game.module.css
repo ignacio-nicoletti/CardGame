@@ -88,3 +88,95 @@
   left: 50%;
   bottom: 20%;
 }
+
+
+/* ---------------resultado-------------------------- */
+.resultContain{
+  top:10%;
+  right: 0%;
+  width: 50%;
+  position:absolute;
+  background-color: yellow;
+  overflow-y: scroll;
+  
+}
+.titles{
+  
+  display: flex;
+  justify-content: center;
+}
+.titles p{
+  padding-inline: 2%;
+}
+.datos{
+  display: flex;
+}
+
+.infoResult{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-inline: 5%;
+  border-inline:1px solid black;
+}
+
+.circuloTrue {
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	background: rgb(0, 0, 0);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+  margin-inline:20%;
+  padding:5%
+}
+
+.circuloTrue > p {
+	font-family: sans-serif;
+	color: white;
+	font-weight: bold;
+}
+
+
+
+
+
+.circlecontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle {
+  position: relative;
+  width: 1rem;
+  height: 1rem;
+  margin-inline-start: 10px;
+  border-radius: 50%;
+  background-color: rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24px;
+  overflow: hidden;
+  padding:15%
+}
+
+.circle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: rgb(0, 0, 0);
+  transform: rotate(-45deg);
+}
+.circle > p {
+  font-family: sans-serif;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+}
