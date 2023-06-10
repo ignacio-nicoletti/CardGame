@@ -30,54 +30,59 @@ const Jugadores = ({ jugador, setJugador, ronda, setRonda }) => {
     cardApost=styles.cardApost2
   }
 
-
-
-
   return (
+    
+    
+    
     <div className={estilo}>
       <div >
-        <p>Apuesta: {jugador.apuestaP === -1 ? "-" : jugador.apuestaP}</p>
-        <div >
-          <Image src={person} alt="persona" width={150} height={100} />
-        </div>
-        <p style={{ margin: 0 }}>name{ }</p>
+      <p>Apuesta: {jugador.apuestaP === -1 ? "-" : jugador.apuestaP}</p>
+      <div >
+      <Image src={person} alt="persona" width={150} height={100} />
+      </div>
+      <p style={{ margin: 0 }}>name{ }</p>
       </div>
       <div>
 
-        <div className={alinear}>
+        {/* <div className={alinear}>
           {jugador.cardPersona.map ((e ,index)=> (
             <div className={cardalign} style={{gap:"50"}} key={index}>
-              <Image src={backface} alt="backface Card" width={30} height={30}  style={{transform:rotate}}/>
+            <Image src={backface} alt="backface Card" width={30} height={30}  style={{transform:rotate}}/>
             </div>
-          ))}
-        </div>
-        {/* <div className={alinear}>
+            ))}
+          </div> */}
+        <div className={alinear}>
           {jugador.cardPersona.map((card, index) => (
             <Cards
-              key={index}
-              valor={card.valor}
-              palo={card.palo}
-              jugador={jugador}
-              setJugador={setJugador}
-              setRonda={setRonda}
-              ronda={ronda}
-
+            key={index}
+            valor={card.valor}
+            palo={card.palo}
+            jugador={jugador}
+            setJugador={setJugador}
+            setRonda={setRonda}
+            ronda={ronda}
+            
             />
-          ))}
+            ))}
         </div>
 
-        <div className={cardApost}>
+        <div className={cardApost} >
 
           {jugador.cardApostada[0].valor &&
             jugador.cardApostada.map((card,index) => (
-              <Cards key={index}valor={card.valor} palo={card.palo} />
-            ))}
-        </div> */}
+              <Cards 
+              key={index}
+              valor={card.valor} 
+              palo={card.palo} 
+              border={"3px solid yellow"}/>
+              ))}
+        </div>
 
       </div>
 
-    </div>
-  );
+
+</div>
+);
 };
 
 export default Jugadores;

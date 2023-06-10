@@ -1,13 +1,15 @@
 'use client';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './card.module.css';
 import basto from '../../assets/valores/basto.png';
 import copa from '../../assets/valores/copas.png';
 import espada from '../../assets/valores/espada.png';
 import oro from '../../assets/valores/oro.png';
 
-const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
+const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda,border }) => {
+  
+  console.log(border);
   let imgPalo = {
     oro: oro,
     espada: espada,
@@ -55,8 +57,8 @@ const Cards = ({ jugador, setJugador, valor, palo, ronda, setRonda }) => {
   };
 
   return (
-    <div className={styles.spanishDeck} onClick={handlerclick}>
-      <div className={styles.valueContain} >
+    <div className={styles.spanishDeck}  style={{border:border}}>
+      <div className={styles.valueContain} onClick={handlerclick}>
 
         <p style={{ display: 'flex', alignSelf: 'flex-end' }}>{valor}</p>
         <Image

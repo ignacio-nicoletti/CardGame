@@ -10,9 +10,9 @@
 
 
 .CardPropias {
-  display: flex;
+  display:flex;
   flex-direction: row;
-  position:relative;
+  position:absolute;
   gap: 10px;
   top: 75%;
   left: 25%;
