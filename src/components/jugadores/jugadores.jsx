@@ -65,7 +65,7 @@ const Jugadores = ({ jugador, setJugador, ronda, setRonda }) => {
             />
             ))}
         </div>
-
+*/}
         <div className={cardApost} >
 
           {jugador.cardApostada[0].valor &&
@@ -76,7 +76,7 @@ const Jugadores = ({ jugador, setJugador, ronda, setRonda }) => {
               palo={card.palo} 
               border={"3px solid yellow"}/>
               ))}
-        </div> */}
+        </div> 
 
       </div>
 

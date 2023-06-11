@@ -61,7 +61,7 @@ export default function Game () {
     cantUser: 4, //usuarios conectados
     vuelta: 1, //num de vuelta (4 rondas =1 vuelta)
     numeroRonda: 1, //num de ronda
-    cardPorRonda: 1, //cant de cartas que se reparten
+    cardPorRonda: 7, //cant de cartas que se reparten
     typeRound: '', //apuesta o ronda
     turnoJugadorA: 1, //1j 2j 3j 4j apuesta
     turnoJugadorR: 1, //1j 2j 3j 4j ronda
