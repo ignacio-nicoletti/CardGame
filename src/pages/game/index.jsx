@@ -6,25 +6,21 @@ import Cards from '@/components/cards/card';
 import Jugadores from '@/components/jugadores/jugadores';
 import {useEffect, useState} from 'react';
 import Apuesta from '@/components/apuesta/apuesta';
-import {repartir, shuffle} from '@/logica/logica';
-
-import {Socket} from 'socket.io-client';
 import {
-  asignarJ,
-  disconnectSocket,
-  initiateSocket,
-  joinGameRoom,
-  joinRoom,
-} from '../../SocketIO/sockets/sockets';
+  AsignarMayor,
+  gameInit,
+  repartir,
+  shuffle,
+  turno,
+} from '@/logica/logica';
+
 import {WriteName} from '@/components/writeName/writeName';
 const inter = Inter ({subsets: ['latin']});
-import {io} from 'socket.io-client';
+
 import socketService from '@/SocketIO/socketService';
-// import { joinRoom } from '../services/gameService';
 
 export default function Game () {
   const socket = socketService.socket;
-  const [users, setUsers] = useState ([]);
 
   const [writeName, setWriteName] = useState (true);
 
@@ -40,6 +36,7 @@ export default function Game () {
     cumplio: false, //boolean
     puntos: 0,
   });
+
   const [jugador2, setJugador2] = useState ({
     username: '',
     id: 2,
@@ -52,6 +49,7 @@ export default function Game () {
     cumplio: false, //boolean
     puntos: 0,
   });
+
   const [jugador3, setJugador3] = useState ({
     username: '',
     id: 3,
@@ -64,6 +62,7 @@ export default function Game () {
     cumplio: false, //boolean
     puntos: 0,
   });
+
   const [jugador4, setJugador4] = useState ({
     username: '',
     id: 4,
@@ -81,7 +80,7 @@ export default function Game () {
     cantUser: 4, //usuarios conectados
     vuelta: 1, //num de vuelta (4 rondas =1 vuelta)
     numeroRonda: 1, //num de ronda
-    cardPorRonda: 7, //cant de cartas que se reparten
+    cardPorRonda: 1, //cant de cartas que se reparten
     typeRound: '', //apuesta o ronda
     turnoJugadorA: 1, //1j 2j 3j 4j apuesta
     turnoJugadorR: 1, //1j 2j 3j 4j ronda
@@ -98,6 +97,7 @@ export default function Game () {
 
   const [activo, setActivo] = useState (false); //modal del resultado
 
+  const [loader, setLoader] = useState (true);
   const mezclar = () => {
     let baraja = barajar ();
     let cartasMezcladas = shuffle (baraja);
@@ -119,104 +119,31 @@ export default function Game () {
     });
   };
 
-  const generarObligado = () => {
-    let min = 1;
-    let max = 4;
-    let obligado = Math.floor (Math.random () * (max - min + 1) + min);
-    return obligado;
-  };
+  useEffect (
+    () => {
+      gameInit (setRonda, mezclar, setLoader, ronda, jugador1);
+    },
+    [jugador1.username]
+  );
 
-  const gameInit = () => {
-    let numObligado = generarObligado ();
-
-    if (ronda.vuelta === 1) {
-      setRonda ({...ronda, typeRound: 'apuesta', obligado: 4});
-      mezclar ();
-    }
-  };
-
-  // socket.on("game",()=>{
-
-  //   console.log("emitido")
-  //   if (ronda.vuelta === 1) {
-  //     setRonda ({...ronda, typeRound: 'apuesta', obligado: 4});
-  //     mezclar ();
+  // const comprobarMasGrande = array => {
+  //   let mayor;
+  //   if (array[1].valor === null) {
+  //     mayor = array[0];
+  //     return mayor;
+  //   } else if (array[0].valor !== null && array[1].valor !== null) {
+  //     if (ronda.CardGanadoraxRonda[0].valor < array[0].valor) {
+  //       mayor = array[0];
+  //     } else mayor = ronda.CardGanadoraxRonda[0];
+  //     return mayor;
   //   }
-  // })
+  // };
 
-  const turno = () => {
-    if (ronda.typeRound === 'apuesta') {
-      if (ronda.turnoJugadorA === 1) {
-        setJugador1 ({...jugador1, myturnA: true});
-        setJugador2 ({...jugador2, myturnA: false});
-        setJugador3 ({...jugador3, myturnA: false});
-        setJugador4 ({...jugador4, myturnA: false});
-      }
-      if (ronda.turnoJugadorA === 2) {
-        setJugador2 ({...jugador2, myturnA: true});
-        setJugador1 ({...jugador1, myturnA: false});
-        setJugador3 ({...jugador3, myturnA: false});
-        setJugador4 ({...jugador4, myturnA: false});
-      }
-      if (ronda.turnoJugadorA === 3) {
-        setJugador3 ({...jugador3, myturnA: true});
-        setJugador1 ({...jugador1, myturnA: false});
-        setJugador2 ({...jugador2, myturnA: false});
-        setJugador4 ({...jugador4, myturnA: false});
-      }
-      if (ronda.turnoJugadorA === 4) {
-        setJugador4 ({...jugador4, myturnA: true});
-        setJugador1 ({...jugador1, myturnA: false});
-        setJugador2 ({...jugador2, myturnA: false});
-        setJugador3 ({...jugador3, myturnA: false});
-      }
-    }
-    if (ronda.typeRound === 'ronda') {
-      if (ronda.turnoJugadorR === 1) {
-        setJugador1 ({...jugador1, myturnR: true});
-        setJugador2 ({...jugador2, myturnR: false});
-        setJugador3 ({...jugador3, myturnR: false});
-        setJugador4 ({...jugador4, myturnR: false});
-      }
-      if (ronda.turnoJugadorR === 2) {
-        setJugador2 ({...jugador2, myturnR: true});
-        setJugador1 ({...jugador1, myturnR: false});
-        setJugador3 ({...jugador3, myturnR: false});
-        setJugador4 ({...jugador4, myturnR: false});
-      }
-      if (ronda.turnoJugadorR === 3) {
-        setJugador3 ({...jugador3, myturnR: true});
-        setJugador1 ({...jugador1, myturnR: false});
-        setJugador2 ({...jugador2, myturnR: false});
-        setJugador4 ({...jugador4, myturnR: false});
-      }
-      if (ronda.turnoJugadorR === 4) {
-        setJugador4 ({...jugador4, myturnR: true});
-        setJugador1 ({...jugador1, myturnR: false});
-        setJugador2 ({...jugador2, myturnR: false});
-        setJugador3 ({...jugador3, myturnR: false});
-      }
-    }
-  };
-
-  const comprobarMasGrande = array => {
-    let mayor;
-    if (array[1].valor === null) {
-      mayor = array[0];
-      return mayor;
-    } else if (array[0].valor !== null && array[1].valor !== null) {
-      if (ronda.CardGanadoraxRonda[0].valor < array[0].valor) {
-        mayor = array[0];
-      } else mayor = ronda.CardGanadoraxRonda[0];
-      return mayor;
-    }
-  };
-
-  const AsignarMayor = (value1, value2) => {
-    let array = [value1, value2];
-    let ganador = comprobarMasGrande (array);
-    setRonda ({...ronda, CardGanadoraxRonda: [ganador]});
-  };
+  // const AsignarMayor = (value1, value2) => {
+  //   let array = [value1, value2];
+  //   let ganador = comprobarMasGrande (array);
+  //   setRonda ({...ronda, CardGanadoraxRonda: [ganador]});
+  // };
 
   const SumarGanada = () => {
     switch (ronda.CardGanadoraxRonda[0].id) {
@@ -502,13 +429,24 @@ export default function Game () {
 
   useEffect (
     () => {
-      // if (ronda.cantQueTiraron > 0) {
       AsignarMayor (
         ronda.ultimaCardApostada[0],
-        ronda.AnteultimaCardApostada[0]
+        ronda.AnteultimaCardApostada[0],
+        ronda,
+        setRonda
       );
       // }//setea la card mas grande
-      turno (); //no borrar turno
+      turno (
+        ronda,
+        jugador1,
+        jugador2,
+        jugador3,
+        jugador4,
+        setJugador1,
+        setJugador2,
+        setJugador3,
+        setJugador4
+      ); //no borrar turno
     },
     [ronda.cantQueTiraron, ronda.typeRound, ronda.numeroRonda]
   );
@@ -529,14 +467,34 @@ export default function Game () {
         setTurnoRound ();
         cambioDeVuelta ();
       }
-      turno ();
+      turno (
+        ronda,
+        jugador1,
+        jugador2,
+        jugador3,
+        jugador4,
+        setJugador1,
+        setJugador2,
+        setJugador3,
+        setJugador4
+      );
     },
     [ronda.numeroRonda]
   );
 
   useEffect (
     () => {
-      turno ();
+      turno (
+        ronda,
+        jugador1,
+        jugador2,
+        jugador3,
+        jugador4,
+        setJugador1,
+        setJugador2,
+        setJugador3,
+        setJugador4
+      );
     },
     [ronda.turnoJugadorR, ronda.vuelta, ronda.typeRound]
   );
@@ -568,7 +526,17 @@ export default function Game () {
           resetRound ();
         }, 1000);
       }
-      turno ();
+      turno (
+        ronda,
+        jugador1,
+        jugador2,
+        jugador3,
+        jugador4,
+        setJugador1,
+        setJugador2,
+        setJugador3,
+        setJugador4
+      );
     },
     [jugador1.puntos, jugador2.puntos, jugador3.puntos, jugador4.puntos]
   );
@@ -591,8 +559,6 @@ export default function Game () {
       {writeName === true
         ? <WriteName
             setWriteName={setWriteName}
-            setUsers={setUsers}
-            users={users}
             setJugador1={setJugador1}
             jugador1={jugador1}
             setJugador2={setJugador2}
@@ -601,8 +567,17 @@ export default function Game () {
             jugador3={jugador3}
             setJugador4={setJugador4}
             jugador4={jugador4}
-            />
-            : <div>
+          />
+        : <div>
+
+            {loader === true
+              ? <div className={style.containLoader}>
+
+                  <div className={style.loader}>
+                    Loading...
+                  </div>
+                </div>
+              : ''}
             {ronda.cantUser === 4
               ? <div className={style.jugadorestres}>
 
@@ -640,7 +615,7 @@ export default function Game () {
                   </div>
                 </div>}
             <div />
-                <h1 style={{color:"red"}}>{jugador1.username}</h1>
+            <h1 style={{color: 'red'}}>{jugador1.username}</h1>
 
             <div className={style.CardPropias}>
               {jugador1.cardPersona.map ((card, index) => (

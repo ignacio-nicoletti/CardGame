@@ -1,19 +1,10 @@
-import {
-  asignado,
-  asignarJ,
-  connectSocket,
-  EmitAsignar,
-  joinGameRoom,
-  OnAsignar,
-  SalaLLena,
-} from '@/SocketIO/sockets/sockets';
+import {EmitAsignar, joinGameRoom, OnSalaLLena} from '@/SocketIO/sockets/sockets';
 import socketService from '@/SocketIO/socketService';
 import {useState} from 'react';
 import style from './writeName.module.css';
 
 export const WriteName = ({
   setWriteName,
-  setUsers,
   setJugador1,
   jugador1,
   setJugador2,
@@ -35,10 +26,9 @@ export const WriteName = ({
       alert (err);
     });
     setWriteName (!join);
-  
-   
+
     if (join) {
-      let data = await SalaLLena (socket);
+      let data = await OnSalaLLena (socket);
       setJugador1 ({...jugador1, username: data.jugadores.jugador1.username});
       setJugador2 ({...jugador2, username: data.jugadores.jugador2.username});
       setJugador3 ({...jugador3, username: data.jugadores.jugador3.username});

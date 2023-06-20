@@ -25,7 +25,7 @@ export const joinGameRoom = (socket, roomId, userName) => {
   });
 };
 
-export const SalaLLena = (socket) => {
+export const OnSalaLLena = (socket) => {
   return new Promise((res, rej) => {
     socket.on("salaLLena", (data) => {
       res(data);

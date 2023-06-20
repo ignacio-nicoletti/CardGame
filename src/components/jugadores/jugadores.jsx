@@ -5,7 +5,7 @@ import styles from './jugadores.module.css';
 import person from '../../assets/jugadores/person2.png';
 import backface from '../../assets/valores/backface.png';
 import Cards from '../cards/card';
-const Jugadores = ({ jugador}) => {
+const Jugadores = ({ jugador,setJugador,setRonda,ronda}) => {
 
 
   let estilo;
@@ -44,14 +44,14 @@ const Jugadores = ({ jugador}) => {
       </div>
       <div>
 
-        <div className={alinear}>
+        {/* <div className={alinear}>
           {jugador.cardPersona.map ((e ,index)=> (
             <div className={cardalign} style={{gap:"50"}} key={index}>
             <Image src={backface} alt="backface Card" width={30} height={30}  style={{transform:rotate}}/>
             </div>
             ))}
-          </div>
-        {/* <div className={alinear}>
+          </div> */}
+        <div className={alinear}>
           {jugador.cardPersona.map((card, index) => (
             <Cards
             key={index}
@@ -65,7 +65,7 @@ const Jugadores = ({ jugador}) => {
             />
             ))}
         </div>
-*/}
+
         <div className={cardApost} >
 
           {jugador.cardApostada[0].valor &&
