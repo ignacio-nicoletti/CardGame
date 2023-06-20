@@ -5,7 +5,7 @@ import styles from './jugadores.module.css';
 import person from '../../assets/jugadores/person2.png';
 import backface from '../../assets/valores/backface.png';
 import Cards from '../cards/card';
-const Jugadores = ({ jugador, setJugador, ronda, setRonda }) => {
+const Jugadores = ({ jugador}) => {
 
 
   let estilo;
@@ -40,7 +40,7 @@ const Jugadores = ({ jugador, setJugador, ronda, setRonda }) => {
       <div >
       <Image src={person} alt="persona" width={150} height={100} />
       </div>
-      <p style={{ margin: 0 }}>name{ }</p>
+      <p style={{ margin: 0 }}>name: {jugador.username}</p>
       </div>
       <div>
 

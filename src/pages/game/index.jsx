@@ -7,12 +7,29 @@ import Jugadores from '@/components/jugadores/jugadores';
 import {useEffect, useState} from 'react';
 import Apuesta from '@/components/apuesta/apuesta';
 import {repartir, shuffle} from '@/logica/logica';
-import {getRequestMeta} from 'next/dist/server/request-meta';
 
+import {Socket} from 'socket.io-client';
+import {
+  asignarJ,
+  disconnectSocket,
+  initiateSocket,
+  joinGameRoom,
+  joinRoom,
+} from '../../SocketIO/sockets/sockets';
+import {WriteName} from '@/components/writeName/writeName';
 const inter = Inter ({subsets: ['latin']});
+import {io} from 'socket.io-client';
+import socketService from '@/SocketIO/socketService';
+// import { joinRoom } from '../services/gameService';
 
 export default function Game () {
+  const socket = socketService.socket;
+  const [users, setUsers] = useState ([]);
+
+  const [writeName, setWriteName] = useState (true);
+
   const [jugador1, setJugador1] = useState ({
+    username: '',
     id: 1,
     cardPersona: [],
     apuestaP: null,
@@ -24,6 +41,7 @@ export default function Game () {
     puntos: 0,
   });
   const [jugador2, setJugador2] = useState ({
+    username: '',
     id: 2,
     cardPersona: [],
     apuestaP: null,
@@ -35,6 +53,7 @@ export default function Game () {
     puntos: 0,
   });
   const [jugador3, setJugador3] = useState ({
+    username: '',
     id: 3,
     cardPersona: [],
     apuestaP: null,
@@ -46,6 +65,7 @@ export default function Game () {
     puntos: 0,
   });
   const [jugador4, setJugador4] = useState ({
+    username: '',
     id: 4,
     cardPersona: [],
     apuestaP: null,
@@ -114,6 +134,15 @@ export default function Game () {
       mezclar ();
     }
   };
+
+  // socket.on("game",()=>{
+
+  //   console.log("emitido")
+  //   if (ronda.vuelta === 1) {
+  //     setRonda ({...ronda, typeRound: 'apuesta', obligado: 4});
+  //     mezclar ();
+  //   }
+  // })
 
   const turno = () => {
     if (ronda.typeRound === 'apuesta') {
@@ -559,231 +588,249 @@ export default function Game () {
 
   return (
     <div className={style.contain}>
-
-      {ronda.cantUser === 4
-        ? <div className={style.jugadorestres}>
-
-            <div className={style.jugador2}>
-              <Jugadores
-                jugador={jugador2}
-                setJugador={setJugador2}
-                setRonda={setRonda}
-                ronda={ronda}
-              />
-            </div>
-            <div className={style.jugador3}>
-              <Jugadores
-                jugador={jugador3}
-                setJugador={setJugador3}
-                setRonda={setRonda}
-                ronda={ronda}
-              />
-            </div>
-            <div className={style.jugador4}>
-              <Jugadores
-                jugador={jugador4}
-                setJugador={setJugador4}
-                setRonda={setRonda}
-                ronda={ronda}
-              />
-            </div>
-          </div>
-        : <div className={style.jugadoresdos}>
-            <div>
-              <Jugadores jugador={jugador2} />
-            </div>
-            <div>
-              <Jugadores jugador={jugador3} />
-            </div>
-          </div>}
-      <div />
-
-      <div className={style.CardPropias}>
-        {jugador1.cardPersona.map ((card, index) => (
-          <Cards
-            key={index}
-            valor={card.valor}
-            palo={card.palo}
-            jugador={jugador1}
-            setJugador={setJugador1}
-            setRonda={setRonda}
-            ronda={ronda}
-          />
-        ))}
-      </div>
-      <div className={style.infoPartida}>
-        <p>tipo: {ronda.typeRound} </p>
-        <p>Obligado: jugador{ronda.obligado}</p>
-        <p>Cartas Repartidas: {ronda.cardPorRonda} </p>
-        <p>Apuesta total: {ronda.ApuestaTotal}</p>
-        <p>
-          Carta Ganadora:
-
-          {' ' + ronda.CardGanadoraxRonda[0].valor + ' '}
-
-          {ronda.CardGanadoraxRonda[0].palo}
-        </p>
-        <p>Vuelta: {ronda.vuelta}</p>
-        <p>Ronda: {ronda.numeroRonda}</p>
-        <p>
-          turno: jugador
-          {ronda.typeRound === 'apuesta'
-            ? ronda.turnoJugadorA
-            : ronda.turnoJugadorR}
-        </p>
-      </div>
-      <div className={style.infoPropia}>
-        <p>
-          Apuesta propia:
-          {' '}
-          {jugador1.apuestaP === -1 ? '-' : jugador1.apuestaP}
-          {' '}
-          carta/s
-          {' '}
-        </p>
-        <p>Ganadas: {jugador1.cardsganadas}</p>
-        
-        <p>Cumplio: {jugador1.cumplio === true ? '✔' : '❌'}</p>
-        {/* <button onClick={mezclar}>Mezclar</button> */}
-        <button onClick={gameInit}>Comenzar Juego</button>
-
-      </div>
-      {ronda.typeRound === 'apuesta'
-        ? <Apuesta
-            jugador1={jugador1}
+      {writeName === true
+        ? <WriteName
+            setWriteName={setWriteName}
+            setUsers={setUsers}
+            users={users}
             setJugador1={setJugador1}
-            jugador2={jugador2}
+            jugador1={jugador1}
             setJugador2={setJugador2}
-            jugador3={jugador3}
+            jugador2={jugador2}
             setJugador3={setJugador3}
-            jugador4={jugador4}
+            jugador3={jugador3}
             setJugador4={setJugador4}
-            ronda={ronda}
-            setRonda={setRonda}
-          />
-        : ''}
-      <div className={style.CardApostada}>
+            jugador4={jugador4}
+            />
+            : <div>
+            {ronda.cantUser === 4
+              ? <div className={style.jugadorestres}>
 
-        {jugador1.cardApostada[0].valor &&
-          jugador1.cardApostada.map ((card, index) => (
-            <Cards key={index} valor={card.valor} palo={card.palo} />
-          ))}
-      </div>
+                  <div className={style.jugador2}>
+                    <Jugadores
+                      jugador={jugador2}
+                      setJugador={setJugador2}
+                      setRonda={setRonda}
+                      ronda={ronda}
+                    />
+                  </div>
+                  <div className={style.jugador3}>
+                    <Jugadores
+                      jugador={jugador3}
+                      setJugador={setJugador3}
+                      setRonda={setRonda}
+                      ronda={ronda}
+                    />
+                  </div>
+                  <div className={style.jugador4}>
+                    <Jugadores
+                      jugador={jugador4}
+                      setJugador={setJugador4}
+                      setRonda={setRonda}
+                      ronda={ronda}
+                    />
+                  </div>
+                </div>
+              : <div className={style.jugadoresdos}>
+                  <div>
+                    <Jugadores jugador={jugador2} />
+                  </div>
+                  <div>
+                    <Jugadores jugador={jugador3} />
+                  </div>
+                </div>}
+            <div />
+                <h1 style={{color:"red"}}>{jugador1.username}</h1>
 
-      <div onClick={() => setActivo (!activo)} className={style.buttonResult}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="icon icon-tabler icon-tabler-award-filled"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M19.496 13.983l1.966 3.406a1.001 1.001 0 0 1 -.705 1.488l-.113 .011l-.112 -.001l-2.933 -.19l-1.303 2.636a1.001 1.001 0 0 1 -1.608 .26l-.082 -.094l-.072 -.11l-1.968 -3.407a8.994 8.994 0 0 0 6.93 -3.999z"
-            stroke-width="0"
-            fill="orange"
-          />
-          <path
-            d="M11.43 17.982l-1.966 3.408a1.001 1.001 0 0 1 -1.622 .157l-.076 -.1l-.064 -.114l-1.304 -2.635l-2.931 .19a1.001 1.001 0 0 1 -1.022 -1.29l.04 -.107l.05 -.1l1.968 -3.409a8.994 8.994 0 0 0 6.927 4.001z"
-            stroke-width="0"
-            fill="orange"
-          />
-          <path
-            d="M12 2l.24 .004a7 7 0 0 1 6.76 6.996l-.003 .193l-.007 .192l-.018 .245l-.026 .242l-.024 .178a6.985 6.985 0 0 1 -.317 1.268l-.116 .308l-.153 .348a7.001 7.001 0 0 1 -12.688 -.028l-.13 -.297l-.052 -.133l-.08 -.217l-.095 -.294a6.96 6.96 0 0 1 -.093 -.344l-.06 -.271l-.049 -.271l-.02 -.139l-.039 -.323l-.024 -.365l-.006 -.292a7 7 0 0 1 6.76 -6.996l.24 -.004z"
-            stroke-width="0"
-            fill="orange"
-          />
-        </svg>
-      </div>
+            <div className={style.CardPropias}>
+              {jugador1.cardPersona.map ((card, index) => (
+                <Cards
+                  key={index}
+                  valor={card.valor}
+                  palo={card.palo}
+                  jugador={jugador1}
+                  setJugador={setJugador1}
+                  setRonda={setRonda}
+                  ronda={ronda}
+                />
+              ))}
+            </div>
+            <div className={style.infoPartida}>
+              <p>tipo: {ronda.typeRound} </p>
+              <p>Obligado: jugador{ronda.obligado}</p>
+              <p>Cartas Repartidas: {ronda.cardPorRonda} </p>
+              <p>Apuesta total: {ronda.ApuestaTotal}</p>
+              <p>
+                Carta Ganadora:
 
-      {activo === true
-        ? <div className={style.resultContain}>
-            <div className={style.titles}>
+                {' ' + ronda.CardGanadoraxRonda[0].valor + ' '}
 
-              <p>Ronda |</p>
-              <p>jugador 1 |</p>
-              <p>jugador 2 |</p>
-              <p>jugador 3 |</p>
-              <p>jugador 4 |</p>
+                {ronda.CardGanadoraxRonda[0].palo}
+              </p>
+              <p>Vuelta: {ronda.vuelta}</p>
+              <p>Ronda: {ronda.numeroRonda}</p>
+              <p>
+                turno: jugador
+                {ronda.typeRound === 'apuesta'
+                  ? ronda.turnoJugadorA
+                  : ronda.turnoJugadorR}
+              </p>
+            </div>
+            <div className={style.infoPropia}>
+              <p>
+                Apuesta propia:
+                {' '}
+                {jugador1.apuestaP === -1 ? '-' : jugador1.apuestaP}
+                {' '}
+                carta/s
+                {' '}
+              </p>
+              <p>Ganadas: {jugador1.cardsganadas}</p>
+
+              <p>Cumplio: {jugador1.cumplio === true ? '✔' : '❌'}</p>
+              {/* <button onClick={mezclar}>Mezclar</button> */}
+              <button onClick={gameInit}>Comenzar Juego</button>
+
+            </div>
+            {ronda.typeRound === 'apuesta'
+              ? <Apuesta
+                  jugador1={jugador1}
+                  setJugador1={setJugador1}
+                  jugador2={jugador2}
+                  setJugador2={setJugador2}
+                  jugador3={jugador3}
+                  setJugador3={setJugador3}
+                  jugador4={jugador4}
+                  setJugador4={setJugador4}
+                  ronda={ronda}
+                  setRonda={setRonda}
+                />
+              : ''}
+            <div className={style.CardApostada}>
+
+              {jugador1.cardApostada[0].valor &&
+                jugador1.cardApostada.map ((card, index) => (
+                  <Cards key={index} valor={card.valor} palo={card.palo} />
+                ))}
             </div>
 
-            {Base.map ((e, index) => (
-              <div key={index} className={style.datos}>
-                <div className={style.infoResult}>
-                  {e.ronda.cards}
-                </div>
-                <div className={style.infoResult}>
-                  {e.jugador1.puntos}
+            <div
+              onClick={() => setActivo (!activo)}
+              className={style.buttonResult}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon icon-tabler icon-tabler-award-filled"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M19.496 13.983l1.966 3.406a1.001 1.001 0 0 1 -.705 1.488l-.113 .011l-.112 -.001l-2.933 -.19l-1.303 2.636a1.001 1.001 0 0 1 -1.608 .26l-.082 -.094l-.072 -.11l-1.968 -3.407a8.994 8.994 0 0 0 6.93 -3.999z"
+                  stroke-width="0"
+                  fill="orange"
+                />
+                <path
+                  d="M11.43 17.982l-1.966 3.408a1.001 1.001 0 0 1 -1.622 .157l-.076 -.1l-.064 -.114l-1.304 -2.635l-2.931 .19a1.001 1.001 0 0 1 -1.022 -1.29l.04 -.107l.05 -.1l1.968 -3.409a8.994 8.994 0 0 0 6.927 4.001z"
+                  stroke-width="0"
+                  fill="orange"
+                />
+                <path
+                  d="M12 2l.24 .004a7 7 0 0 1 6.76 6.996l-.003 .193l-.007 .192l-.018 .245l-.026 .242l-.024 .178a6.985 6.985 0 0 1 -.317 1.268l-.116 .308l-.153 .348a7.001 7.001 0 0 1 -12.688 -.028l-.13 -.297l-.052 -.133l-.08 -.217l-.095 -.294a6.96 6.96 0 0 1 -.093 -.344l-.06 -.271l-.049 -.271l-.02 -.139l-.039 -.323l-.024 -.365l-.006 -.292a7 7 0 0 1 6.76 -6.996l.24 -.004z"
+                  stroke-width="0"
+                  fill="orange"
+                />
+              </svg>
+            </div>
 
-                  {e.jugador1.cumplio === true
-                    ? <div className={style.circuloTrue}>
-                        <p> {e.jugador1.apostadas}</p>
+            {activo === true
+              ? <div className={style.resultContain}>
+                  <div className={style.titles}>
+
+                    <p>Ronda |</p>
+                    <p>jugador 1 |</p>
+                    <p>jugador 2 |</p>
+                    <p>jugador 3 |</p>
+                    <p>jugador 4 |</p>
+                  </div>
+
+                  {Base.map ((e, index) => (
+                    <div key={index} className={style.datos}>
+                      <div className={style.infoResult}>
+                        {e.ronda.cards}
                       </div>
-                    : <div className={style.circlecontainer}>
-                        <div className={style.circle}>
-                          <p> {e.jugador1.apostadas}</p>
-                        </div>
-                      </div>}
+                      <div className={style.infoResult}>
+                        {e.jugador1.puntos}
 
-                </div>
-                <div className={style.infoResult}>
-                  {e.jugador2.puntos}
-                  {e.jugador2.cumplio === true
-                    ? <div className={style.circuloTrue}>
-                        <p> {e.jugador2.apostadas}</p>
+                        {e.jugador1.cumplio === true
+                          ? <div className={style.circuloTrue}>
+                              <p> {e.jugador1.apostadas}</p>
+                            </div>
+                          : <div className={style.circlecontainer}>
+                              <div className={style.circle}>
+                                <p> {e.jugador1.apostadas}</p>
+                              </div>
+                            </div>}
+
                       </div>
-                    : <div className={style.circlecontainer}>
-                        <div className={style.circle}>
-                          <div className={style.number}>
-                            <p> {e.jugador2.apostadas}</p>
+                      <div className={style.infoResult}>
+                        {e.jugador2.puntos}
+                        {e.jugador2.cumplio === true
+                          ? <div className={style.circuloTrue}>
+                              <p> {e.jugador2.apostadas}</p>
+                            </div>
+                          : <div className={style.circlecontainer}>
+                              <div className={style.circle}>
+                                <div className={style.number}>
+                                  <p> {e.jugador2.apostadas}</p>
 
-                          </div>
-                        </div>
-                      </div>}
+                                </div>
+                              </div>
+                            </div>}
 
-                </div>
-                <div className={style.infoResult}>
-                  {e.jugador3.puntos}
-                  {e.jugador3.cumplio === true
-                    ? <div className={style.circuloTrue}>
-                        <p> {e.jugador3.apostadas}</p>
                       </div>
-                    : <div className={style.circlecontainer}>
-                        <div className={style.circle}>
+                      <div className={style.infoResult}>
+                        {e.jugador3.puntos}
+                        {e.jugador3.cumplio === true
+                          ? <div className={style.circuloTrue}>
+                              <p> {e.jugador3.apostadas}</p>
+                            </div>
+                          : <div className={style.circlecontainer}>
+                              <div className={style.circle}>
 
-                          <p> {e.jugador3.apostadas}</p>
-                        </div>
-                      </div>}
-                </div>
-
-                <div className={style.infoResult}>
-
-                  {e.jugador4.puntos}
-                  {e.jugador4.cumplio === true
-                    ? <div className={style.circuloTrue}>
-                        <p> {e.jugador4.apostadas}</p>
+                                <p> {e.jugador3.apostadas}</p>
+                              </div>
+                            </div>}
                       </div>
-                    : <div className={style.circlecontainer}>
-                        <div className={style.circle}>
 
-                          <p> {e.jugador4.apostadas}</p>
+                      <div className={style.infoResult}>
 
-                        </div>
-                      </div>}
+                        {e.jugador4.puntos}
+                        {e.jugador4.cumplio === true
+                          ? <div className={style.circuloTrue}>
+                              <p> {e.jugador4.apostadas}</p>
+                            </div>
+                          : <div className={style.circlecontainer}>
+                              <div className={style.circle}>
+
+                                <p> {e.jugador4.apostadas}</p>
+
+                              </div>
+                            </div>}
+                      </div>
+
+                    </div>
+                  ))}
+
                 </div>
-
-              </div>
-            ))}
-
-          </div>
-        : ''}
-
+              : ''}
+          </div>}
     </div>
   );
 }

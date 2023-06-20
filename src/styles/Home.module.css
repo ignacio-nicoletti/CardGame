@@ -21,6 +21,7 @@
   font-size: 50px;
   margin: 0;
   padding: 0;
+  box-shadow: rgba(2, 45, 15, 0.459) 0px 30px 60px -12px , rgba(9, 104, 39, 0.25) 0px 18px 36px -18px ;
 }
 
 .option {

@@ -3,10 +3,16 @@ import Image from 'next/image';
 import {Inter} from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 import Link from 'next/link';
+import {useEffect} from 'react';
+import {connectSocket} from '@/SocketIO/sockets/sockets';
 
 const inter = Inter ({subsets: ['latin']});
 
 export default function Home () {
+  useEffect (() => {
+    connectSocket ();
+  }, []);
+
   return (
     <div className={styles.contain}>
       <div className={styles.containOption}>
@@ -14,9 +20,13 @@ export default function Home () {
         <h1>Bienvenido al Berenjena</h1>
         <div className={styles.option}>
 
-        <Link href="/gameIa" className={styles.link}>• Jugar contra la IA 👤</Link>
-        <Link href="/game" className={styles.link}>• Jugar con un amigo 👥</Link>
-        <Link href="/rules" className={styles.link}>• Reglas 📜</Link>
+          <Link href="/gameIa" className={styles.link}>
+            • Jugar contra la IA 👤
+          </Link>
+          <Link href="/game" className={styles.link}>
+            • Jugar con un amigo 👥
+          </Link>
+          <Link href="/rules" className={styles.link}>• Reglas 📜</Link>
         </div>
 
       </div>
